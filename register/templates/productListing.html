@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>Products</title>
+
+   <style>
+      .product-box {display: block; background-color: lightgray; border: 1px solid black; width: 200px;}
+      .product {border: 0px;}
+      p span {display: block;}
+      body {text-align: center;}
+      a {color: inherit; text-decoration: none; cursor: pointer;}
+   </style>
+
+</head>
+
+<body>
+
+    <h1>Products Listing</h1>
+    {% for product in products %}
+    <div class="product">
+      <a class="product-box" href="{{ product.get_product_url }}">
+         <p><span>Product Code: {{ product.lookupcode }}</span></p>
+         <p><span>Product Count: {{ product.count }}</span></p>
+         <p><span>Created On: {{ product.get_created_date }}</span></p> </a>
+   </div>
+   <br />
+   <br />
+    {% endfor %}
+
+</body>
+
+</html>

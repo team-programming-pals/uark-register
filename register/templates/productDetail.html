@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>Product</title>
+
+   <style>
+      body {text-align: center;}
+   </style>
+
+</head>
+
+<body>
+
+        <!-- This is just a super basic page to get things up and running. This will have to be completely
+              rewritten after we develop the API needed to add, remove, and update database entries
+               from the front-end.-->
+
+    <h1>Product Detail</h1>
+    {% if product.id %}
+    <form action="#"> <!--TODO: We need to write a simple API we can use to update existing products. I will do this later-->
+        <label for="fname">Product Code:</label><br>
+        <input type="text" id="lookupcode" name="lookupcode" value="{{ product.lookupcode }}"><br>
+        <label for="lname">Count:</label><br>
+        <input type="text" id="count" name="count" value="{{ product.count }}"><br><br>
+        <input type="submit" value="Save">
+    </form> 
+    {% else %}
+    <form action="#"> <!--TODO: We need to write a simple API we can use to create new products. I will do this later-->
+        <label for="fname">Product Code:</label><br>
+        <input type="text" id="lookupcode" name="lookupcode" value=""><br>
+        <label for="lname">Count:</label><br>
+        <input type="text" id="count" name="count" value=""><br><br>
+        <input type="submit" value="Create">
+    </form> 
+    {% endif %}
+</body>
+
+</html>
