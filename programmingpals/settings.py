@@ -26,7 +26,7 @@ SECRET_KEY = 'b*kc$0(5g%!+5rfhu&@a-dn7u9tsa%l=fz(o@kbk5&fj=s@bz6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [*]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'programmingpals.wsgi.application'
 
 DATABASES = {
     'default': {
-        dj_database_url.config(default='postgres://localhost')    
+        dj_database_url.config(default='postgres://localhost'),    
     }
 }
 
