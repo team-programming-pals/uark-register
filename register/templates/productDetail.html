@@ -14,11 +14,11 @@
 
         <!-- This is just a super basic page to get things up and running. This will have to be completely
               rewritten after we develop the API needed to add, remove, and update database entries
-               from the front-end.-->
+               from the front-end. Also, would one of you mind giving our templates a much needed facelift?-->
 
     <h1>Product Detail</h1>
     {% if product.id %}
-    <form action="#"> <!--TODO: We need to write a simple API we can use to update existing products. I will do this later-->
+    <form action="#">
         <label for="fname">Product Code:</label><br>
         <input type="text" id="lookupcode" name="lookupcode" value="{{ product.lookupcode }}"><br>
         <label for="lname">Count:</label><br>
@@ -26,7 +26,7 @@
         <input type="submit" value="Save">
     </form> 
     {% else %}
-    <form action="#"> <!--TODO: We need to write a simple API we can use to create new products. I will do this later-->
+    <form action="#">
         <label for="fname">Product Code:</label><br>
         <input type="text" id="lookupcode" name="lookupcode" value=""><br>
         <label for="lname">Count:</label><br>

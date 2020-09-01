@@ -22,17 +22,24 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+""" 
+SECURITY WARNING: keep the secret key used in production secret! 
+The current secret will be replaced once the project is complete.
+"""
 SECRET_KEY = 'b*kc$0(5g%!+5rfhu&@a-dn7u9tsa%l=fz(o@kbk5&fj=s@bz6'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+"""
+SECURITY WARNING: don't run with debug turned on in production!
+This option will be left enabled to make development easier and
+will be switched off once the project is complete.
+"""
 DEBUG = True
 
+# All hosts are allowed during development to lessen potential configuration woes between team members.
 ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'register.apps.RegisterConfig',
     'django.contrib.admin',
@@ -75,9 +82,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'programmingpals.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+"""
+Database
+https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+By default Heroku will store database information as an environment variable.
+The dj_database_url module will automatically pull this information from your
+Heroku instance and use it as the default database entry.
+"""
 DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
 # Password validation
@@ -119,7 +131,7 @@ USE_TZ = False
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
-#  Add configuration for static files storage using whitenoise
+# Heroku recommends using whitenoise for static file storage
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # Heroku settings
