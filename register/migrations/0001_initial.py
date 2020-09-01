@@ -5,7 +5,10 @@ from django.db import migrations, models
 """
 To use this migration file you need to create a new database on Heroku or locally. Once the project has been pushed
 to your Heroku instance or has been configured to run locally, you can automatically populate the database with all
-of the required tables and data by executing the following command: python manage.py migrate
+of the required tables and data by executing the following command: 
+
+For local migration: python manage.py migrate
+For Heroku migration: heroku run python manage.py migrate
 
 
 See the following URL for examples
