@@ -36,12 +36,10 @@ function updateProduct() {
 	ajaxPost('/api/product/', productData, csrftoken, (callbackResponse) => {
 
 	if (isSuccessResponse(callbackResponse)) {
-		// We need code here to display a successful request on the productDetails.html page
 		document.getElementById("status").innerHTML = "Database successfully updated.";
 	}
 
 	if (isErrorResponse(callbackResponse)){
-		// We need code here to display a failed request on the productDetails.html page
 		document.getElementById("status").innerHTML = "Unable to update database.";
 	}
 });
