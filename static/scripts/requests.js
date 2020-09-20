@@ -1,6 +1,5 @@
-// AJAX
-function ajaxGet(resourceRelativeUri, csrftoken, callback) {
-	return ajax(resourceRelativeUri, "GET", null, csrftoken, callback);
+function ajaxGet(resourceRelativeUri, callback) {
+	return ajax(resourceRelativeUri, "GET", null, null, callback);
 }
 
 function ajaxPost(resourceRelativeUri, data, csrftoken, callback) {
@@ -25,12 +24,11 @@ function ajax(resourceRelativeUri, verb, data, csrftoken, callback) {
 	};
 
 	httpRequest.open(verb, resourceRelativeUri, true);
-	if (data != null) {
+	if ((data != null) && (csrftoken != null)) {
 		httpRequest.setRequestHeader('X-CSRFToken', csrftoken);
 		httpRequest.setRequestHeader('Content-Type', 'application/json');
 		httpRequest.send(JSON.stringify(data));
 	} else {
-		httpRequest.setRequestHeader('X-CSRFToken', csrftoken);
 		httpRequest.send();
 	}
 
@@ -38,8 +36,6 @@ function ajax(resourceRelativeUri, verb, data, csrftoken, callback) {
 }
 
 function handleSuccessResponse(httpRequest, callback) {
-	clearError();
-
 	if (callback != null) {
 		let callbackResponse = { status: httpRequest.status };
 
@@ -61,7 +57,7 @@ function handleFailureResponse(httpRequest, callback) {
 		return;
 	}
 
-	let errorMessage = "Unable to complete the requested action.";
+	let errorMessage = "The API is not responding. Try again later.";
 
 	if ((httpRequest.responseText != null)
 		&& (httpRequest.responseText !== "")) {
@@ -88,13 +84,12 @@ function handleFailureResponse(httpRequest, callback) {
 		}
 	}
 
-	displayError(errorMessage);
+	 document.getElementById("status").innerHTML = errorMessage;
 
 	if (callback != null) {
 		callback({ status: httpRequest.status });
 	}
 }
-// End AJAX
 
 function isSuccessResponse(callbackResponse) {
 	return ((callbackResponse != null)
@@ -106,53 +101,3 @@ function isSuccessResponse(callbackResponse) {
 function isErrorResponse(callbackResponse) {
 	return !isSuccessResponse(callbackResponse);
 }
-
-// Display error message
-function clearError() {
-	const errorMessageContainerElement = getErrorMessageContainerElement();
-
-	if ((errorMessageContainerElement == null)
-		|| errorMessageContainerElement.classList.contains("hidden")) {
-
-		return;
-	}
-
-	errorMessageContainerElement.classList.add("hidden");
-
-	const errorMessageDisplayElement = getErrorMessageDisplayElement();
-
-	if (errorMessageDisplayElement != null) {
-		errorMessageDisplayElement.innerHTML = "";
-	}
-}
-
-function displayError(errorMessage) {
-	if ((errorMessage == null) || (errorMessage === "")) {
-		return;
-	}
-
-	const errorMessageDisplayElement = getErrorMessageDisplayElement();
-	const errorMessageContainerElement = getErrorMessageContainerElement();
-
-	if ((errorMessageContainerElement == null)
-		|| (errorMessageDisplayElement == null)) {
-
-		return;
-	}
-
-	errorMessageDisplayElement.innerHTML = errorMessage;
-	if (errorMessageContainerElement.classList.contains("hidden")) {
-		errorMessageContainerElement.classList.remove("hidden");
-	}
-}
-// End display error message
-
-//Getters and setters
-function getErrorMessageContainerElement() {
-	return document.getElementById("error");
-}
-
-function getErrorMessageDisplayElement() {
-	return document.getElementById("errorMessage");
-}
-// End getters and setters

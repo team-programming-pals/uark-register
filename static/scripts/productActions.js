@@ -1,65 +1,48 @@
-// Getters and setters
 function getProductId() {
-	return getProductIdElement().value;
-}
-
-function getProductIdElement() {
-	return document.getElementById("productID");
+	return document.getElementById("productID").value;
 }
 
 function getProductLookupCode() {
-	return getProductLookupCodeElement().value;
-}
-
-function getProductLookupCodeElement() {
-	return document.getElementById("lookupcode");
+	return document.getElementById("lookupcode").value;
 }
 
 function getProductCount() {
-	return Number(getProductCountElement().value);
-}
-
-function getProductCountElement() {
-	return document.getElementById("count");
+	return Number(document.getElementById("count").value);
 }
 
 function getProductAction() {
-	return getProductActionElement().value;
+	return document.getElementById("action").value;
 }
 
-function getProductActionElement() {
-	return document.getElementById("action");
-}
-
-function getCookie(name) {
-    let cookieValue = null;
+function getCSRFToken(name) {
+    let tokenValue = null;
     if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        const tokens = document.cookie.split(';');
+        for (let i = 0; i < tokens.length; i++) {
+            const token = tokens[i].trim();
+            if (token.substring(0, name.length + 1) === (name + '=')) {
+                tokenValue = decodeURIComponent(token.substring(name.length + 1));
                 break;
             }
         }
     }
-    return cookieValue;
+    return tokenValue;
 }
 
 function updateProduct() {
-	const csrftoken = getCookie('csrftoken');
+	const csrftoken = getCSRFToken('csrftoken');
 	const productData = {id: getProductId(), count: getProductCount(), lookupcode: getProductLookupCode(), action: getProductAction()};
 
 	ajaxPost('/api/product/', productData, csrftoken, (callbackResponse) => {
 
 	if (isSuccessResponse(callbackResponse)) {
-		alert('Database updated successfully!');
+		// We need code here to display a successful request on the productDetails.html page
+		document.getElementById("status").innerHTML = "Database successfully updated.";
+	}
 
-		if ((callbackResponse.data != null)
-					&& (callbackResponse.data.id != null)
-			&& (callbackResponse.data.id.trim() !== "")) {
-		}
+	if (isErrorResponse(callbackResponse)){
+		// We need code here to display a failed request on the productDetails.html page
+		document.getElementById("status").innerHTML = "Unable to update database.";
 	}
 });
 
