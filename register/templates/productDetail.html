@@ -3,7 +3,9 @@
 
 <head>
    <title>Product</title>
-
+   {% load static %}
+   <script type="text/javascript" src="{% static 'scripts/requests.js' %}"defer></script>
+   <script type="text/javascript" src="{% static 'scripts/productActions.js' %}" defer></script>
    <style>
       body {text-align: center;}
    </style>
@@ -18,11 +20,13 @@
 
     <h1>Product Detail</h1>
     {% if product.id %}
-    <form action="#">
+    <form action="javascript:updateProduct();">
         <label for="fname">Product Code:</label><br>
         <input type="text" id="lookupcode" name="lookupcode" value="{{ product.lookupcode }}"><br>
         <label for="lname">Count:</label><br>
         <input type="text" id="count" name="count" value="{{ product.count }}"><br><br>
+        <input type="hidden" id="productID" name="productID" value="{{ product.id }}">
+        <input type="hidden" id="action" name="action" value="updateProduct">
         <input type="submit" value="Save">
     </form> 
     {% else %}

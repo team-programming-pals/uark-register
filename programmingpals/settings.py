@@ -90,7 +90,9 @@ By default Heroku will store database information as an environment variable.
 The dj_database_url module will automatically pull this information from your
 Heroku instance and use it as the default database entry.
 """
-DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
+#DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
+
+DATABASES = {'default': dj_database_url.config(default='postgres://qmozdzzwkzbppv:50ff5a0c6ce1ad1f6f77d1c1baa529538cce567e9062c09422a3dd6af9969319@ec2-54-166-107-5.compute-1.amazonaws.com:5432/dc6eu7nlt659pq')}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -133,6 +135,11 @@ STATIC_URL = '/static/'
 
 # Heroku recommends using whitenoise for static file storage
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 # Heroku settings
 django_heroku.settings(locals())

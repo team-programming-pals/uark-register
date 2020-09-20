@@ -26,6 +26,7 @@ from register import views
 
 urlpatterns = [
     path('', views.productListing, name='productListing'),
+    path('api/product/', views.productAPI, name='productAPI'),
     path('productDetail/<uuid:id>/', views.productDetail, name='productDetail'),
     path('productDetail/', views.productDetail, name='productDetail'),
     path('admin/', admin.site.urls),
