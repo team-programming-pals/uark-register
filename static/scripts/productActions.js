@@ -30,10 +30,11 @@ function getCSRFToken(name) {
 }
 
 function updateProduct() {
+	const productActionURL = ('/api/products/' + (getProductId()) + '/');
 	const csrftoken = getCSRFToken('csrftoken');
 	const productData = {id: getProductId(), count: getProductCount(), lookupcode: getProductLookupCode(), action: getProductAction()};
 
-	ajaxPost('/api/product/', productData, csrftoken, (callbackResponse) => {
+	ajaxPut(productActionURL, productData, csrftoken, (callbackResponse) => {
 
 	if (isSuccessResponse(callbackResponse)) {
 		document.getElementById("status").innerHTML = "Database successfully updated.";

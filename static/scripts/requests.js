@@ -1,11 +1,29 @@
+// Return data from API endpoint
 function ajaxGet(resourceRelativeUri, callback) {
 	return ajax(resourceRelativeUri, "GET", null, null, callback);
 }
 
+// Create new database records
 function ajaxPost(resourceRelativeUri, data, csrftoken, callback) {
 	return ajax(resourceRelativeUri, "POST", data, csrftoken, callback);
 }
 
+// Update existing database records
+function ajaxPut(resourceRelativeUri, data, csrftoken, callback) {
+	return ajax(resourceRelativeUri, "PUT", data, csrftoken, callback);
+}
+
+// Update individual fields of a record
+function ajaxPatch(resourceRelativeUri, data, callback) {
+	return ajax(resourceRelativeUri, "PATCH", data, null, callback);
+}
+
+// Delete records from the database
+function ajaxDelete(resourceRelativeUri, csrftoken, callback) {
+	return ajax(resourceRelativeUri, "DELETE", null, csrftoken, callback);
+}
+
+// Build and fire off our HTTP request
 function ajax(resourceRelativeUri, verb, data, csrftoken, callback) {
 	const httpRequest = new XMLHttpRequest();
 
@@ -35,6 +53,7 @@ function ajax(resourceRelativeUri, verb, data, csrftoken, callback) {
 	return httpRequest;
 }
 
+// Generate a response if the API is accessible
 function handleSuccessResponse(httpRequest, callback) {
 	if (callback != null) {
 		let callbackResponse = { status: httpRequest.status };
@@ -52,6 +71,7 @@ function handleSuccessResponse(httpRequest, callback) {
 	}
 }
 
+// Generate a response if the API is inaccessible
 function handleFailureResponse(httpRequest, callback) {
 	if ((httpRequest == null) || (httpRequest.status === 0)) {
 		return;
@@ -91,6 +111,7 @@ function handleFailureResponse(httpRequest, callback) {
 	}
 }
 
+// Check if our request succeeded
 function isSuccessResponse(callbackResponse) {
 	return ((callbackResponse != null)
 		&& (callbackResponse.status != null)
@@ -98,6 +119,7 @@ function isSuccessResponse(callbackResponse) {
 		&& (callbackResponse.status < 300));
 }
 
+// Check if our request failed
 function isErrorResponse(callbackResponse) {
 	return !isSuccessResponse(callbackResponse);
 }

@@ -1,5 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
+from rest_framework import viewsets
+from .serializers import productSerializer
 from .models import Product
 import json
 
@@ -13,22 +15,10 @@ def Home(request):
     return render(request, 'home.html')
 """
 
-def productAPI(request):
-	if request.method == 'POST':
-		post_data = json.loads(request.body)
-		action = post_data['action']
-		id = post_data['id']
-		lookupcode = post_data['lookupcode']
-		count = post_data['count']
-
-		if action == "updateProduct":
-			Product.updateProduct(id, lookupcode, count)
-			return HttpResponse(status=200)
-		else:
-			return HttpResponse(status=401)
-			
-	else:
-		return HttpResponse(status=401)
+# Create a view set for the product API
+class productViewSet(viewsets.ModelViewSet):
+	queryset = Product.objects.all()
+	serializer_class = productSerializer
 
 def productListing(request):
     return render(request, 'productListing.html', {'products': Product.objects.all()})

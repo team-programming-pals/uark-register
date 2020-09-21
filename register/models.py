@@ -25,19 +25,6 @@ class Product(models.Model):
         # Remove undesired information about the creation time of an item and only return the creation date
         return (datetime.strptime(str(self.createdon).split()[0], '%Y-%m-%d').strftime('%m/%d/%Y'))
 
-    def updateProduct(id, lookupcode, count):
-        # Create a new object that references a specific database entry
-        updateObject = Product.objects.get(pk=id)
-
-        # Update the lookupcode and count values
-        updateObject.lookupcode = lookupcode
-        updateObject.count = count
-
-        # Save our changes to the database
-        updateObject.save()
-
-        return (str("SUCCESS"))
-
     def __str__(self):
         # This is the default response from a Product object
         return (str(self.id))

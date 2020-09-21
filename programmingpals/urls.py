@@ -21,12 +21,21 @@ Simplified instructions
     5. Profit
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
 from register import views
+
+# Create a router so the rest framrwork can automatically route paths
+router = routers.DefaultRouter()
+
+# Register our product API with the rest framework
+router.register(r'products', views.productViewSet)
 
 urlpatterns = [
     path('', views.productListing, name='productListing'),
-    path('api/product/', views.productAPI, name='productAPI'),
+    path('api/<uuid:id>/', include(router.urls)),
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('productDetail/<uuid:id>/', views.productDetail, name='productDetail'),
     path('productDetail/', views.productDetail, name='productDetail'),
     path('admin/', admin.site.urls),
