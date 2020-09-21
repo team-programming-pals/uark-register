@@ -1,6 +1,6 @@
 // Return data from API endpoint
 function ajaxGet(resourceRelativeUri, callback) {
-	return ajax(resourceRelativeUri, "GET", null, null, callback);
+	return ajax(resourceRelativeUri, action, "GET", null, null, callback);
 }
 
 // Create new database records
