@@ -1,41 +1,27 @@
-"""programmingpals URL Configuration
+"""
+Helpful Resources:
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-	https://docs.djangoproject.com/en/3.1/topics/http/urls/
-Examples:
-Function views
-	1. Add an import:  from my_app import views
-	2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-	1. Add an import:  from other_app.views import Home
-	2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-	1. Import the include() function: from django.urls import include, path
-	2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-
-Simplified instructions
-	1. Add a URL to urlpatterns like I have done below
-	2. Modify register/views.py and add support for the new URL
-	3. Create a new HTML file for the URL in register/templates
-	4. ???
-	5. Profit
+    1. https://docs.djangoproject.com/en/3.1/topics/http/urls/
+    2. https://www.django-rest-framework.org/tutorial/quickstart/
 """
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from register import views
 
-# Create a router so the rest framrwork can automatically route paths
+
+# Create a router so our API endpoint(s) can automatically route traffic
 router = routers.DefaultRouter()
 
-# Register our product API with the rest framework
+# Register our products API with the rest framework
 router.register(r'products', views.productViewSet)
 
+# Tell Django how to route traffic to specific pages
 urlpatterns = [
-	path('', views.productListing, name='productListing'),
-	path('api/<uuid:id>/', include(router.urls)),
-	path('api/', include(router.urls)),
-	path('productDetails/<uuid:productUUID>/', views.productDetails, name='productDetails'),
-	path('productCreate/', views.productCreate, name='productCreate'),
-	path('admin/', admin.site.urls),
+	path('', views.productListing, name='productListing'), # This is the default page that will be displayed
+	path('api/<uuid:id>/', include(router.urls)), # This is for API endpoint requests that pass along an id
+	path('api/', include(router.urls)), # This will automatically route traffic for any number of API endpoints
+	path('admin/', admin.site.urls), # This will route the traffic to the Django admin panel
+	path('productDetails/<uuid:productUUID>/', views.productDetails, name='productDetails'), # This is the product details page
+	path('productCreate/', views.productCreate, name='productCreate'), # This is the product creation page
 ]

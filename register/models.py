@@ -1,16 +1,16 @@
+
+"""
+Helpful Resources:
+
+    1. https://docs.djangoproject.com/en/3.1/topics/db/models/
+"""
 from django.db import models
 from django.urls import reverse
 from datetime import datetime
 from uuid import uuid4
 
-"""
-Django uses models to define the data we are working with. Each of our models will map
-to a single database table. We can also expand on the model to add useful abstractions
-which allow us to manipulate the data in meaningful ways.
 
-See the following link for more information
-https://docs.djangoproject.com/en/3.1/topics/db/models/
-"""
+# Create a model for the Product table in our database
 class Product(models.Model):
     productUUID = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     productCode = models.CharField(db_index=True, default='', max_length=32)

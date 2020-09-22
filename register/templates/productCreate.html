@@ -15,15 +15,16 @@
     <div id='statusBox'>
         <p id="status"></p>
     </div>
+    
     <form action="javascript:createProduct();">
-        <label for="productCode">Product Code:</label><br>
+        <label for="productCode">Product Name:</label>
         <input type="text" id="productCode" name="productCode" value=""><br>
-        <label for="productCount">Count:</label><br>
+        <label for="productCount">Product QTY:</label>
         <input type="number" id="productCount" name="productCount" value=""><br><br>
-        <input type="submit" value="Create" class="button blueButton">
+        <input type="submit" value="Create" class="button productCreateBlueButton">
+        <button type="button" class="button productCreateGreenButton" onclick="window.location.href='/';">Return Home</button>
         {% csrf_token %}
     </form>
-    <div><button type="button" class="button greenButton" onclick="window.location.href='/';">Home</button></div>
 
 </body>
 

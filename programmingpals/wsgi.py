@@ -1,16 +1,12 @@
 """
-WSGI config for programmingpals project.
+Helpful Resources:
 
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/
+    1. https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/
 """
-
-import os
-
 from django.core.wsgi import get_wsgi_application
+from os import environ
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'programmingpals.settings')
 
+# Register our web application with any WSGI-compliant web server
+environ.setdefault('DJANGO_SETTINGS_MODULE', 'programmingpals.settings')
 application = get_wsgi_application()

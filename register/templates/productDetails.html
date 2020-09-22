@@ -18,16 +18,17 @@
 
     {% if product.productUUID %}
     <form action="javascript:updateProduct();">
-        <label for="productCode">Product Code:</label><br>
+        <label for="productCode">Product Name:</label>
         <input type="text" id="productCode" name="productCode" value="{{ product.productCode }}"><br>
-        <label for="productCount">Count:</label><br>
+        <label for="productCount">Product QTY:</label>
         <input type="number" id="productCount" name="productCount" value="{{ product.productCount }}"><br><br>
         <input type="hidden" id="productUUID" name="productUUID" value="{{ product.productUUID }}">
-        <input type="submit" value="Save" class="button blueButton">
+        <input type="submit" value="Save" class="button productDetailsBlueButton">
+        <button type="button" class="button productDetailsGreenButton" onclick="window.location.href='/';">Return Home</button>
         {% csrf_token %}
     </form> 
     {% endif %}
-    <div><button type="button" class="button greenButton" onclick="window.location.href='/';">Home</button></div>
+    
 </body>
 
 </html>

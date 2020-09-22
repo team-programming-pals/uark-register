@@ -1,7 +1,16 @@
 
+/* The following colors are our official color scheme:
+Green: #4CAF50
+Blue: #008CBA
+Red: #f44336
+Gray: #e7e7e7
+Black: #555555
+*/
+
 /* Align h1, div and form tags to the center of the page */
 h1, div, form {
 	text-align: center;
+	color: #555555;
 }
 
 /* Make links look more uniform */
@@ -12,27 +21,30 @@ a, a:link, a:active, a:visited {
 	color: #008CBA;
 }
 
+/* Make the label fields for forms look better */
+label {
+	display: inline-block;
+	padding: 5px 0 0;
+	margin: 5px;
+	width: 250px;
+	text-align: right;
+}
+
 /* Make the input fields for forms look better */
 input{
-  	padding: 16px 32px;
-  	margin: 4px 2px;
-  	box-sizing: border-box;
-  	font-size: 16px;
-  	border: 1px solid #555;
-  	outline: none;
-  	transition-duration: 0.4s;
+	display: inline-block;
+	padding: 24px 32px;
+	margin: 10px 8px;
+	outline: none;
+	box-sizing: border-box;
+	font-size: 16px;
+	border: 1px solid #555555;
+	transition-duration: 0.4s;
 }
 
 /* Highlight the border of an input field when selected */
 input:focus {
   background-color: lightblue;
-}
-
-/* This is the flex container for our product listings. */
-.productContainer {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
 }
 
 /* Hide the status box which will display messages to the user */
@@ -43,11 +55,19 @@ input:focus {
 	border: 10px solid #4CAF50; 
 }
 
+/* This is the flex container for our product listings. */
+.productContainer {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
 /* This is the small rectangle that an individual item is displayed in */
 .productBox {
-	box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	flex: 0 1 calc(25% - 1em); /* Display 4 products per line and leave a space between them */
-	margin: auto;
+	margin-bottom: 10px;
+	margin: 5px;
 	text-align: center;
 	font-family: arial;
 }
@@ -80,37 +100,95 @@ input:focus {
 	border: none;
 	color: white;
 	padding: 16px 32px;
-  	text-align: center;
-  	text-decoration: none;
-  	display: inline-block;
-  	font-size: 16px;
-  	margin: 4px 2px;
-  	transition-duration: 0.4s;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	transition-duration: 0.4s;
 
 }
 
-/* This will make a button with a blue border and black text */
-.blueButton {
+/* The productDetails button that correctly aligns with the form */
+.productDetailsBlueButton {
+	margin-left: 300px;
 	background-color: white;
 	color: black;
 	border: 2px solid #008CBA;
 }
 
-/* This will make a blue button change its background color to blue when you hover over it */
-.blueButton:hover {
+/* This will change the buttons background to blue when hovered over*/
+.productDetailsBlueButton:hover {
 	background-color: #008CBA;
 	color: white;
 }
 
 /* This will make a button with a green border and black text */
-.greenButton {
+.productDetailsGreenButton {
+	margin-left: 10px;
 	background-color: white;
 	color: black;
 	border: 2px solid #4CAF50;
 }
 
 /* This will make a green button change its background color to green when you hover over it */
-.greenButton:hover {
+.productDetailsGreenButton:hover {
+	background-color: #4CAF50;
+	color: white;
+}
+
+
+/* The productCreate button that correctly aligns with the form */
+.productCreateBlueButton {
+	margin-left: 290px;
+	background-color: white;
+	color: black;
+	border: 2px solid #008CBA;
+}
+
+/* This will change the buttons background to blue when hovered over*/
+.productCreateBlueButton:hover {
+	background-color: #008CBA;
+	color: white;
+}
+
+/* This will make a button with a green border and black text */
+.productCreateGreenButton {
+	margin-left: 10px;
+	background-color: white;
+	color: black;
+	border: 2px solid #4CAF50;
+}
+
+/* This will make a green button change its background color to green when you hover over it */
+.productCreateGreenButton:hover {
+	background-color: #4CAF50;
+	color: white;
+}
+
+/* A generic blue button that will work well outside of forms*/
+.productGenericBlueButton {
+	background-color: white;
+	color: black;
+	border: 2px solid #008CBA;
+}
+
+/* This will change the buttons background to blue when hovered over*/
+.productGenericBlueButton:hover {
+	background-color: #008CBA;
+	color: white;
+}
+
+/* A generic green button that will work well outside of forms*/
+.productGenericGreenButton {
+	margin-left: 10px;
+	background-color: white;
+	color: black;
+	border: 2px solid #4CAF50;
+}
+
+/* This will make a green button change its background color to green when you hover over it */
+.productGenericGreenButton:hover {
 	background-color: #4CAF50;
 	color: white;
 }
