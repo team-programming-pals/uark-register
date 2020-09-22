@@ -19,7 +19,7 @@ class Product(models.Model):
 
     def get_product_url(self):
         # Return a URL which can be used to display more information about a particular product
-        return ('productDetail/{}').format(str(self.productUUID))
+        return ('productDetails/{}').format(str(self.productUUID))
     
     def get_created_date(self):
         # Remove undesired information about the creation time of an item and only return the creation date

@@ -72,7 +72,7 @@ function updateProduct() {
 	/* Set up the request by specifying the correct API endpoint,
 	grabbing the unique csrf token and collecting the data we
 	would like to send to the API */
-	const productActionURL = ('/api/products/' + (getProductId()) + '/');
+	const productActionURL = ('/api/products/' + (getProductUUID()) + '/');
 	const securityToken = getCSRFToken('csrftoken');
 	const productData = {productUUID: getProductUUID(), productCount: getProductCount(), productCode: getProductCode()};
 

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>Uark Register - Add a product</title>
+   {% load static %}
+   <script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}"defer></script>
+   <script type="text/javascript" src="{% static 'scripts/productActions.js' %}" defer></script>
+   <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
+</head>
+
+<body>
+
+    <h1>Create Product</h1>
+    <div id='statusBox'>
+        <p id="status"></p>
+    </div>
+    <form action="javascript:createProduct();">
+        <label for="productCode">Product Code:</label><br>
+        <input type="text" id="productCode" name="productCode" value=""><br>
+        <label for="productCount">Count:</label><br>
+        <input type="number" id="productCount" name="productCount" value=""><br><br>
+        <input type="submit" value="Create" class="button blueButton">
+        {% csrf_token %}
+    </form>
+    <div><button type="button" class="button greenButton" onclick="window.location.href='/';">Home</button></div>
+
+</body>
+
+</html>

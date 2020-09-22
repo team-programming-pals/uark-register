@@ -4,14 +4,23 @@ h1, div, form {
 	text-align: center;
 }
 
+/* Make links look more uniform */
+a, a:link, a:active, a:visited {
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: #008CBA;
+}
 
 /* Make the input fields for forms look better */
 input{
-  padding: 12px 20px;
-  margin: 8px 0px;
-  box-sizing: border-box;
-  border: 1px solid #555;
-  outline: none;
+  	padding: 16px 32px;
+  	margin: 4px 2px;
+  	box-sizing: border-box;
+  	font-size: 16px;
+  	border: 1px solid #555;
+  	outline: none;
+  	transition-duration: 0.4s;
 }
 
 /* Highlight the border of an input field when selected */
@@ -90,5 +99,18 @@ input:focus {
 /* This will make a blue button change its background color to blue when you hover over it */
 .blueButton:hover {
 	background-color: #008CBA;
+	color: white;
+}
+
+/* This will make a button with a green border and black text */
+.greenButton {
+	background-color: white;
+	color: black;
+	border: 2px solid #4CAF50;
+}
+
+/* This will make a green button change its background color to green when you hover over it */
+.greenButton:hover {
+	background-color: #4CAF50;
 	color: white;
 }

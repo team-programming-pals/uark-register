@@ -2,7 +2,7 @@
 <html>
 
 <head>
-   <title>Product</title>
+   <title>Uark Register - {{ product.productCode }}</title>
    {% load static %}
    <script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}"defer></script>
    <script type="text/javascript" src="{% static 'scripts/productActions.js' %}" defer></script>
@@ -11,10 +11,11 @@
 
 <body>
 
-    <h1>Product Detail</h1>
+    <h1>Product Details</h1>
     <div id='statusBox'>
         <p id="status"></p>
     </div>
+
     {% if product.productUUID %}
     <form action="javascript:updateProduct();">
         <label for="productCode">Product Code:</label><br>
@@ -22,21 +23,11 @@
         <label for="productCount">Count:</label><br>
         <input type="number" id="productCount" name="productCount" value="{{ product.productCount }}"><br><br>
         <input type="hidden" id="productUUID" name="productUUID" value="{{ product.productUUID }}">
-        {% csrf_token %}
         <input type="submit" value="Save" class="button blueButton">
-    </form> 
-	
-    {% else %}
-    <form action="javascript:createProduct();">
-        <label for="productCode">Product Code:</label><br>
-        <input type="text" id="productCode" name="productCode" value=""><br>
-        <label for="productCount">Count:</label><br>
-        <input type="number" id="productCount" name="productCount" value=""><br><br>
         {% csrf_token %}
-        <input type="submit" value="Create" class="button blueButton">
     </form> 
     {% endif %}
-    
+    <div><button type="button" class="button greenButton" onclick="window.location.href='/';">Home</button></div>
 </body>
 
 </html>
