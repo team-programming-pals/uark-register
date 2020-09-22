@@ -4,44 +4,39 @@
 <head>
    <title>Product</title>
    {% load static %}
-   <script type="text/javascript" src="{% static 'scripts/requests.js' %}"defer></script>
+   <script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}"defer></script>
    <script type="text/javascript" src="{% static 'scripts/productActions.js' %}" defer></script>
-   <style>
-      body {text-align: center;}
-   </style>
-
+   <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
 </head>
 
 <body>
 
-        <!-- This is just a super basic page to get things up and running. This will have to be completely
-              rewritten after we develop the API needed to add, remove, and update database entries
-               from the front-end. Also, would one of you mind giving our templates a much needed facelift?-->
-
     <h1>Product Detail</h1>
-    {% if product.id %}
+    <div id='statusBox'>
+        <p id="status"></p>
+    </div>
+    {% if product.productUUID %}
     <form action="javascript:updateProduct();">
-        <label for="fname">Product Code:</label><br>
-        <input type="text" id="lookupcode" name="lookupcode" value="{{ product.lookupcode }}"><br>
-        <label for="lname">Count:</label><br>
-        <input type="text" id="count" name="count" value="{{ product.count }}"><br><br>
-        <input type="hidden" id="productID" name="productID" value="{{ product.id }}">
+        <label for="productCode">Product Code:</label><br>
+        <input type="text" id="productCode" name="productCode" value="{{ product.productCode }}"><br>
+        <label for="productCount">Count:</label><br>
+        <input type="number" id="productCount" name="productCount" value="{{ product.productCount }}"><br><br>
+        <input type="hidden" id="productUUID" name="productUUID" value="{{ product.productUUID }}">
         {% csrf_token %}
-        <input type="submit" value="Save">
+        <input type="submit" value="Save" class="button blueButton">
     </form> 
 	
     {% else %}
     <form action="javascript:createProduct();">
-        <label for="fname">Product Code:</label><br>
-        <input type="text" id="lookupcode" name="lookupcode" value=""><br>
-        <label for="lname">Count:</label><br>
-        <input type="text" id="count" name="count" value=""><br><br>
+        <label for="productCode">Product Code:</label><br>
+        <input type="text" id="productCode" name="productCode" value=""><br>
+        <label for="productCount">Count:</label><br>
+        <input type="number" id="productCount" name="productCount" value=""><br><br>
         {% csrf_token %}
-        <input type="submit" value="Create">
+        <input type="submit" value="Create" class="button blueButton">
     </form> 
     {% endif %}
     
-    <p id="status"></p>
 </body>
 
 </html>

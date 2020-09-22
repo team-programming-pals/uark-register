@@ -1,0 +1,27 @@
+.productBox {
+	box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.3);
+	max-width: 250px;
+	margin: auto;
+	text-align: center;
+	font-family: arial;
+}
+
+.productBox button {
+	border: none;
+	outline: 0;
+	padding: 12px;
+	color: white;
+	background-color: blue;
+	text-align: center;
+	font-size: 18px;
+	width: 100%;
+}
+
+.productBox button:hover {
+	opacity: 0.7;
+}
+
+.productPrice {
+	color: grey;
+	font-size: 22px;
+}

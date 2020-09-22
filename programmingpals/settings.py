@@ -94,7 +94,6 @@ Heroku instance and use it as the default database entry.
 
 DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 

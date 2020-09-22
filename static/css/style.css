@@ -1,0 +1,94 @@
+
+/* Align h1, div and form tags to the center of the page */
+h1, div, form {
+	text-align: center;
+}
+
+
+/* Make the input fields for forms look better */
+input{
+  padding: 12px 20px;
+  margin: 8px 0px;
+  box-sizing: border-box;
+  border: 1px solid #555;
+  outline: none;
+}
+
+/* Highlight the border of an input field when selected */
+input:focus {
+  background-color: lightblue;
+}
+
+/* This is the flex container for our product listings. */
+.productContainer {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+/* Hide the status box which will display messages to the user */
+.statusBox {
+	display: none;
+	width: 400px;
+	height: 25px;
+	border: 10px solid #4CAF50; 
+}
+
+/* This is the small rectangle that an individual item is displayed in */
+.productBox {
+	box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
+	flex: 0 1 calc(25% - 1em); /* Display 4 products per line and leave a space between them */
+	margin: auto;
+	text-align: center;
+	font-family: arial;
+}
+
+/* This is the button at the bottom of a product listing */
+.productBox button {
+	border: none;
+	outline: 0;
+	padding: 12px;
+	color: white;
+	background-color: #008CBA;
+	text-align: center;
+	font-size: 18px;
+	width: 100%;
+}
+
+/* Make the button at the bottom of a product listing transparent when hovering over it */
+.productBox button:hover {
+	opacity: 0.5;
+}
+
+/* Style the list price of a product */
+.productPrice {
+	color: grey;
+	font-size: 22px;
+}
+
+/* Make buttons not within a product listing look better */
+.button {
+	border: none;
+	color: white;
+	padding: 16px 32px;
+  	text-align: center;
+  	text-decoration: none;
+  	display: inline-block;
+  	font-size: 16px;
+  	margin: 4px 2px;
+  	transition-duration: 0.4s;
+
+}
+
+/* This will make a button with a blue border and black text */
+.blueButton {
+	background-color: white;
+	color: black;
+	border: 2px solid #008CBA;
+}
+
+/* This will make a blue button change its background color to blue when you hover over it */
+.blueButton:hover {
+	background-color: #008CBA;
+	color: white;
+}

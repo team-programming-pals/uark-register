@@ -3,34 +3,27 @@
 
 <head>
    <title>Products</title>
-
-   <style>
-      .product-box {display: block; background-color: lightgray; border: 1px solid black; width: 200px;}
-      .product {border: 0px;}
-      p span {display: block;}
-      body {text-align: center;}
-      a {color: inherit; text-decoration: none; cursor: pointer;}
-   </style>
-
+   {% load static %}
+   <script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}"defer></script>
+   <script type="text/javascript" src="{% static 'scripts/productActions.js' %}" defer></script>
+   <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
 </head>
 
 <body>
 
-           <!-- This is just a super basic page to get things up and running. This will have to be completely
-              rewritten after we develop the API needed to add, remove, and update database entries
-               from the front-end. Also, would one of you mind giving our templates a much needed facelift?-->
-
     <h1>Products Listing</h1>
+    <div><button class="button blueButton" onclick="window.location.href='/productDetail/';">Create New</button></div><br />
+    <section class="productContainer">
     {% for product in products %}
-    <div class="product">
-      <a class="product-box" href="{{ product.get_product_url }}">
-         <p><span>Product Code: {{ product.lookupcode }}</span></p>
-         <p><span>Product Count: {{ product.count }}</span></p>
-         <p><span>Created On: {{ product.get_created_date }}</span></p> </a>
-   </div>
-   <br />
-   <br />
+      <article class="productBox">
+        <h1>{{ product.productCode }}</h1>
+        <p class="productPrice">$0.00</p>
+        <p>Stock: {{ product.productCount }}</p>
+        <p>Available Since: {{ product.get_created_date }}</p>
+        <p><button onclick="window.location.href='{{ product.get_product_url }}';">View Details</button></p>
+      </article>
    {% endfor %}
+   </section>
   
 </body>
 
