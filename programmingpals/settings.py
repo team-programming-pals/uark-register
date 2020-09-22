@@ -147,3 +147,5 @@ STATICFILES_DIRS = (
 
 # Heroku settings
 django_heroku.settings(locals())
+
+#Test comment for commit
