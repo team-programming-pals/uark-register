@@ -116,12 +116,9 @@ def signIn(request):
 		# Grab the username and password from apiRequest.js
 		employeeData = json.loads(request.body)
 
-		# Hash the password
-		hashedEmployeePassword = hashlib.sha256(employeeData['employeePassword'].encode('utf-8')).hexdigest()
-
 		# Query the database and store the result in the employee object
 		employee = Employee.objects.filter(employeeID=employeeData['employeeID'], 
-											employeePassword=hashedEmployeePassword)
+											employeePassword=employeeData['employeePassword'])
 
 		# Route the request in a way apiRequest.js can understand it
 		if (employee.exists()):
@@ -132,7 +129,7 @@ def signIn(request):
 			activeName = ('{} {}').format(str(activeEmployee.employeeFirstName), str(activeEmployee.employeeLastName))
 
 			# Delete any orphaned active sessions the user may have left behind
-			activeSessionCheck = ActiveUser.objects.filter(activeSessionKey=request.session.session_key).delete()
+			activeSessionCheck = ActiveUser.objects.filter(activeEmployeeUUID=activeEmployee.employeeUUID).delete()
 
 			# Create a new session for the active user.
 			if (not request.session.session_key):
@@ -179,7 +176,10 @@ def signOff(request):
 	return HttpResponseRedirect('/signIn')
 
 
+def registerMenu(request):
+	return render(request, 'registerMenu.html')
 
+	
 # Process all client requests for page not found errors
 def register_404(request, exception):
 	return render(request, 'register_404.html')

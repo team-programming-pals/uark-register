@@ -94,7 +94,7 @@ your code to GitHub
 Failure to follow this rule will cause our live demo to eventually break and
 will expose our database username/password to anyone who looks at the code
 """
-DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
+#DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
 
 # You can comment out the database entry above and add a new entry below this line for local testing

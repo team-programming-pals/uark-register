@@ -33,7 +33,7 @@ function registerSignIn() {
 	if (isSuccessResponse(callbackResponse)) {
 
 		// Redirect to the main page after a successful sign in
-		window.location.href='/'
+		window.location.href='/registerMenu'
 	}
 
 	// Use the status code stored in our callbackResponse to see if the request failed
