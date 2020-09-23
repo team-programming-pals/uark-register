@@ -27,7 +27,9 @@
           {% csrf_token %}
       </form>
     {% else %}
-      <h1> There are no employees in the database! </h1>
+      <script>
+        window.location.href='/employeeDetails';
+      </script>
     {% endif %}
     
 </body>

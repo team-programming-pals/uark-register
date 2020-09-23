@@ -103,7 +103,10 @@ def productCreate(request):
 	return render(request, 'productCreate.html')
 
 
-#return HttpResponse({}, status=403)
+def employeeDetails(request):
+	# Transforms employeeDetails.html into an httpResponse object gunicorn can render as a web page
+	return render(request, 'employeeDetails.html')
+
 
 # Process all client requests made to the signIn page
 def signIn(request):

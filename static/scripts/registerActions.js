@@ -1,16 +1,22 @@
-// Grab the product id from the form sending the request
+// Grab the employee uuid from the form sending the request
+function getEmployeeUUID() {
+	return document.getElementById("employeeUUID").value;
+}
+
+
+// Grab the employee id from the form sending the request
 function getEmployeeID() {
 	return document.getElementById("employeeID").value;
 }
 
 
-// Grab the product code from the form sending the request
+// Grab the employee password from the form sending the request
 function getEmployeePassword() {
 	return document.getElementById("employeePassword").value;
 }
 
 
-// Check an employee id/password against the database
+// Sign into an existing account
 function registerSignIn() {
 	/* Set up the request by specifying the correct API endpoint,
 	grabbing the unique csrf token and collecting the data we
@@ -40,6 +46,27 @@ function registerSignIn() {
 
 }
 
+
+// Remove an employee record from the database
+function deleteEmployee() {
+	//Set up the request by specifying the correct API endpoint,
+	const productActionURL = ('/api/employees/' + (getEmployeeUUID()) + '/');
+
+	// As per the comment in apiRequest.js, we need to use the DELETE verb to remove an item from the database
+	ajaxDelete(productActionURL, (callbackResponse) => {
+
+	// Use the status code stored in our callbackResponse to see if the request was successful
+	if (isSuccessResponse(callbackResponse)) {
+		displayMessage('The employee was successfully deleted.', 'success');
+	}
+
+	// Use the status code stored in our callbackResponse to see if the request failed
+	if (isErrorResponse(callbackResponse)){
+		displayMessage('The request to delete an employee was denied.', 'fail');
+	}
+});
+
+}
 
 // Display a message on the page that made the request
 function displayMessage(text, type) {
