@@ -119,7 +119,6 @@ function handleFailureResponse(httpRequest, callback) {
 	}
 
 	 // Display the error message on the page that made the request (<p id="status"></p>)
-	 document.getElementById('statusBox').style.display = 'block';
 	 document.getElementById("status").innerHTML = errorMessage;
 
 	if (callback != null) {

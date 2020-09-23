@@ -4,15 +4,16 @@
 <head>
    <title>Uark Register - Product Page</title>
    {% load static %}
-   <script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}"defer></script>
+   <script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}" defer></script>
    <script type="text/javascript" src="{% static 'scripts/productActions.js' %}" defer></script>
+   <script type="text/javascript" src="{% static 'scripts/registerActions.js' %}" defer></script>
    <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
 </head>
 
 <body>
 
     <h1>Welcome to Uark Register</h1>
-    <div><button class="button productGenericBlueButton" onclick="window.location.href='/productCreate';">Create New</button></div><br />
+    <div><button class="button productGenericBlueButton" onclick="window.location.href='/signIn';">Sign In</button></div><br />
     
     <section class="productContainer">
     {% for product in products %}

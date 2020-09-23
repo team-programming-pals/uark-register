@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>Uark Register - Sign In</title>
+   {% load static %}
+   <script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}" defer></script>
+   <script type="text/javascript" src="{% static 'scripts/registerActions.js' %}" defer></script>
+   <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
+</head>
+
+<body>
+
+    <h1>Uark Register - Sign In</h1>
+    <div id='statusBox'>
+        <p id="status"></p>
+    </div>
+
+    {% if employees.exists %}
+      <form action="javascript:registerSignIn();">
+          <label for="employeeID">Employee ID:</label>
+          <input type="number" id="employeeID" name="employeeID" value=""><br>
+          <label for="employeePassword">Employee Password:</label>
+          <input type="password" id="employeePassword" name="employeePassword" value=""><br><br>
+          <input type="submit" value="Sign In" class="button productDetailsBlueButton">
+          <button type="button" class="button productDetailsGreenButton" onclick="window.location.href='/'";>Return Home</button>
+          {% csrf_token %}
+      </form>
+    {% else %}
+      <h1> There are no employees in the database! </h1>
+    {% endif %}
+    
+</body>
+
+</html>
+
+
+
+
+

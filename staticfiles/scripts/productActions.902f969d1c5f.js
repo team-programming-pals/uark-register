@@ -1,3 +1,4 @@
+
 // Grab the product id from the form sending the request
 function getProductUUID() {
 	return document.getElementById("productUUID").value;
@@ -38,8 +39,6 @@ function createProduct() {
 	// Use the status code stored in our callbackResponse to see if the request failed
 	if (isErrorResponse(callbackResponse)){
 		displayMessage('The request to add a product was denied.', 'failed');
-		document.getElementById('lookupcode').value = '';
-		document.getElementById('count').value = ''
 	}
 });
 
@@ -57,15 +56,11 @@ function deleteProduct() {
 	// Use the status code stored in our callbackResponse to see if the request was successful
 	if (isSuccessResponse(callbackResponse)) {
 		displayMessage('The product was successfully deleted.', 'success');
-		document.getElementById('lookupcode').value = '';
-		document.getElementById('count').value = ''
 	}
 
 	// Use the status code stored in our callbackResponse to see if the request failed
 	if (isErrorResponse(callbackResponse)){
 		displayMessage('The request to delete a product was denied.', 'fail');
-		document.getElementById('lookupcode').value = '';
-		document.getElementById('count').value = ''
 	}
 });
 
@@ -87,15 +82,11 @@ function updateProduct() {
 	// Use the status code stored in our callbackResponse to see if the request was successful
 	if (isSuccessResponse(callbackResponse)) {
 		displayMessage('The product was successfully updated.', 'success');
-		document.getElementById('lookupcode').value = '';
-		document.getElementById('count').value = ''
 	}
 
 	// Use the status code stored in our callbackResponse to see if the request failed
 	if (isErrorResponse(callbackResponse)){
 		displayMessage('The request to update a product was denied.', 'fail');
-		document.getElementById('lookupcode').value = '';
-		document.getElementById('count').value = ''
 	}
 });
 
