@@ -15,7 +15,6 @@
             employeeID = document.getElementById("employeeID").value;
             employeePassword = document.getElementById("employeePassword").value;
             if (isNaN(employeeID) || employeeID == "" || employeePassword == "") {
-                //displayMessage('Invalid username or password.', 'fail');
                 document.getElementById('statusBox').style.background = '#f44336';
                 document.getElementById('statusBox').style.display = 'block';
                 document.getElementById('status').innerHTML = 'Bad username or password.';
