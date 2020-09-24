@@ -1,8 +1,8 @@
 """
 Helpful Resources:
 
-    1. https://docs.djangoproject.com/en/3.1/topics/http/urls/
-    2. https://www.django-rest-framework.org/tutorial/quickstart/
+	1. https://docs.djangoproject.com/en/3.1/topics/http/urls/
+	2. https://www.django-rest-framework.org/tutorial/quickstart/
 """
 from django.contrib import admin
 from django.urls import path, include

@@ -2,31 +2,31 @@
 <html>
 
 <head>
-   <title>Uark Register - Product Page</title>
-   {% load static %}
-   <script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}" defer></script>
-   <script type="text/javascript" src="{% static 'scripts/productActions.js' %}" defer></script>
-   <script type="text/javascript" src="{% static 'scripts/registerActions.js' %}" defer></script>
-   <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
+	 <title>Uark Register - Product Page</title>
+	 {% load static %}
+	 <script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}" defer></script>
+	 <script type="text/javascript" src="{% static 'scripts/productActions.js' %}" defer></script>
+	 <script type="text/javascript" src="{% static 'scripts/registerActions.js' %}" defer></script>
+	 <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
 </head>
 
 <body>
 
-    <h1>Welcome to Uark Register</h1>
-    <div><button class="button productGenericBlueButton" onclick="window.location.href='/productCreate';">Create New</button></div><br />
-    
-    <section class="productContainer">
-    {% for product in products %}
-      <article class="productBox">
-        <h1>{{ product.productCode }}</h1>
-        <p class="productPrice">$0.00</p>
-        <p>Stock: {{ product.productCount }}</p>
-        <p>Available Since: {{ product.get_created_date }}</p>
-        <p><button onclick="window.location.href='{{ product.get_product_url }}';">View Details</button></p>
-      </article>
-   {% endfor %}
-   </section>
-  
+		<h1>Welcome to Uark Register</h1>
+		<div><button class="button productGenericBlueButton" onclick="window.location.href='/productCreate';">Create New</button></div><br />
+		
+		<section class="productContainer">
+		{% for product in products %}
+			<article class="productBox">
+				<h1>{{ product.productCode }}</h1>
+				<p class="productPrice">$0.00</p>
+				<p>Stock: {{ product.productCount }}</p>
+				<p>Available Since: {{ product.get_created_date }}</p>
+				<p><button onclick="window.location.href='{{ product.get_product_url }}';">View Details</button></p>
+			</article>
+	 {% endfor %}
+	 </section>
+	
 </body>
 
 </html>

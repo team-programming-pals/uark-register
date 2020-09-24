@@ -1,7 +1,7 @@
 """
 Helpful Resources:
 
-    1. https://docs.djangoproject.com/en/3.1/howto/deployment/asgi/
+	1. https://docs.djangoproject.com/en/3.1/howto/deployment/asgi/
 """
 from os import environ
 from django.core.asgi import get_asgi_application

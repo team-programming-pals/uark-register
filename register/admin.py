@@ -1,7 +1,7 @@
 """
 Helpful Resources:
 
-    1. https://docs.djangoproject.com/en/3.1/ref/contrib/admin/
+	1. https://docs.djangoproject.com/en/3.1/ref/contrib/admin/
 """
 from django.contrib import admin
 from .models import Product, Employee, ActiveUser
