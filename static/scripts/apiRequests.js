@@ -118,13 +118,9 @@ function handleFailureResponse(httpRequest, callback) {
 		}
 	}
 
-	 // Display the error message on the page that made the request (<p id="status"></p>)
-	 document.getElementById('statusBox').style.display = 'block';
-	 document.getElementById("status").innerHTML = errorMessage;
-
 	if (callback != null) {
-		// Update the requesting functions callback so it can have the status code
-		callback({ status: httpRequest.status });
+		// Update the callback so we can pass along the status code and responseText
+		callback({ status: httpRequest.status, errorMessage: httpRequest.responseText.split('"').join('') });
 	}
 }
 

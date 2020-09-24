@@ -9,16 +9,12 @@
 	<link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
 
 	<script>
-
 		//Validate sign-in
 		function validateSignIn() {
 			employeeID = document.getElementById("employeeID").value;
 			employeePassword = document.getElementById("employeePassword").value;
 			if (isNaN(employeeID) || employeeID == " " || employeePassword == " ") {
-				document.getElementById('statusBox').style.background = '#f44336';
-				document.getElementById('statusBox').style.display = 'block';
-				document.getElementById('status').innerHTML = 'Bad username or password';
-				setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
+				displayMessage('Register Error: All form fields are required.', 'failed');
 			} else {
 			  registerSignIn();
 			}
@@ -36,6 +32,17 @@
 		<p id="status"></p>
 	</div>
 
+	<!-- I could not get displayMessage() to work with the Django template variable
+		so I ended up just displaying the error message like this so I could move on -->
+	{% if errorMessage != 'default' %}
+	<script>
+		document.getElementById('statusBox').style.background = '#f44336';
+		document.getElementById('statusBox').style.display = "block";
+		document.getElementById('status').innerHTML = "{{ errorMessage }}";
+		setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
+	</script>
+	{% endif %}
+
 	{% if employees.exists %}
 	  <form action="javascript:validateSignIn();">
 		  <label for="employeeID">Employee ID:</label>
@@ -50,7 +57,7 @@
 		window.location.href='/employeeDetails';
 	  </script>
 	{% endif %}
-	
+
 </body>
 
 </html>

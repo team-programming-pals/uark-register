@@ -79,37 +79,27 @@ class activeUserViewSet(viewsets.ModelViewSet):
 
 
 # Process all client requests made to the default register page
-def productListing(request):
-	"""
-	Combines productListing.html with a dictionary that has all
-	of the products from the database and returns an httpResponse
-	object that gunicorn can render as a web page
-	"""
-	return render(request, 'productListing.html', {'products': Product.objects.all()})
+def productListing(request, errorMessage='default'):
+	return render(request, 'productListing.html', {'products': Product.objects.all(), 'errorMessage': errorMessage})
+
 
 # Process all client requests made to /productDetails/<uuid:productUUID>/
-def productDetails(request, productUUID):
-	"""
-	Combines productDetail.html with a dictionary that has a
-	single product from our database and returns an httpResponse
-	object that gunicorn can render as a web page
-	"""
-	return render(request, 'productDetails.html', {'product': get_object_or_404(Product, pk=productUUID)})
+def productDetails(request, productUUID, errorMessage='default'):
+	return render(request, 'productDetails.html', {'product': get_object_or_404(Product, pk=productUUID), 'errorMessage': errorMessage})
 
 
 # Process all client requests made to /productCreate/
-def productCreate(request):
-	# Transforms productCreate.html into an httpResponse object gunicorn can render as a web page
-	return render(request, 'productCreate.html')
+def productCreate(request, errorMessage='default'):
+	return render(request, 'productCreate.html', {'errorMessage': errorMessage})
 
 
-def employeeDetails(request):
-	# Transforms employeeDetails.html into an httpResponse object gunicorn can render as a web page
-	return render(request, 'employeeDetails.html')
+# Process all client requests to /employeeDetails/
+def employeeDetails(request, errorMessage='default'):
+	return render(request, 'employeeDetails.html', {'errorMessage': errorMessage})
 
 
 # Process all client requests made to the signIn page
-def signIn(request):
+def signIn(request, errorMessage='default'):
 	# Listen for incoming POST requests
 	if request.method == 'POST':
 
@@ -119,22 +109,17 @@ def signIn(request):
 		# EmployeeID must be an integer
 		if (employeeData['employeeID'].isdigit() == False):
 			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
-			return HttpResponse({}, status=403)
-
-		# Do not accept negative values
-		if (int(employeeData['employeeID']) < 0):
-			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
-			return HttpResponse({}, status=403)
+			return HttpResponse(json.dumps('Register Error: An employeeID must be a positive integer'), status=403)
 
 		# Do not accept a blank employeeID
 		if (employeeData['employeeID'] == ''):
 			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
-			return HttpResponse({}, status=403)
+			return HttpResponse(json.dumps('Register Error: You must enter an employeeID.'), status=403)
 
 		# Do not accept a blank password
 		if (employeeData['employeePassword'] == ''):
 			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
-			return HttpResponse({}, status=403)
+			return HttpResponse(json.dumps('Register Error: You must enter a password.'), status=403)
 
 		# Check if an employee account with the provided employeeID and password exists
 		employee = Employee.objects.filter(employeeID=employeeData['employeeID'], 
@@ -175,10 +160,11 @@ def signIn(request):
 			return HttpResponse({}, status=200)
 		else:
 			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
-			return HttpResponse({}, status=403)
+			return HttpResponse({json.dumps('Register Error: Incorrect username or password')}, status=403)
 
 	# Transforms signin.html into an httpResponse object gunicorn can render as a web page
-	return render(request, 'signin.html', {'employees': Employee.objects.all()})
+	return render(request, 'signin.html', {'employees': Employee.objects.all(), 'errorMessage': errorMessage})
+
 
 # Process all client requests made to the signOff page
 def signOff(request):
@@ -198,7 +184,12 @@ def signOff(request):
 
 
 # Process all client requests for the main menu
-def registerMenu(request):
+def registerMenu(request, errorMessage='default'):
+	if (not request.session.session_key):
+		# Redirect to the sign in page if the user is not signed into the register
+		return signIn(request, 'You must be signed into the register to access the main menu.')
+
+	# There is an active session, so render the main menu
 	return render(request, 'registerMenu.html')
 
 	

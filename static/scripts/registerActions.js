@@ -38,7 +38,7 @@ function registerSignIn() {
 
 	// Use the status code stored in our callbackResponse to see if the request failed
 	if (isErrorResponse(callbackResponse)){
-		displayMessage('Bad username or password. Please try again.', 'failed');
+		displayMessage(callbackResponse.errorMessage, 'failed');
 		document.getElementById('employeeID').value = '';
 		document.getElementById('employeePassword').value = ''
 	}

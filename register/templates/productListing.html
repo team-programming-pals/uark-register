@@ -22,7 +22,7 @@
 				<p class="productPrice">$0.00</p>
 				<p>Stock: {{ product.productCount }}</p>
 				<p>Available Since: {{ product.get_created_date }}</p>
-				<p><button onclick="window.location.href='{{ product.get_product_url }}';">View Details</button></p>
+				<p><button onclick="window.location.href='/{{ product.get_product_url }}';">View Details</button></p>
 			</article>
 	 {% endfor %}
 	 </section>
