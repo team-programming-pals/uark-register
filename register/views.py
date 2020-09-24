@@ -116,58 +116,79 @@ def signIn(request):
 		# Grab the username and password from apiRequest.js
 		employeeData = json.loads(request.body)
 
-		# Query the database and store the result in the employee object
+		# EmployeeID must be an integer
+		if (employeeData['employeeID'].isdigit() == False):
+			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
+			return HttpResponse({}, status=403)
+
+		# Do not accept negative values
+		if (int(employeeData['employeeID']) < 0):
+			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
+			return HttpResponse({}, status=403)
+
+		# Do not accept a blank employeeID
+		if (employeeData['employeeID'] == ''):
+			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
+			return HttpResponse({}, status=403)
+
+		# Do not accept a blank password
+		if (employeeData['employeePassword'] == ''):
+			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
+			return HttpResponse({}, status=403)
+
+		# Check if an employee account with the provided employeeID and password exists
 		employee = Employee.objects.filter(employeeID=employeeData['employeeID'], 
 											employeePassword=employeeData['employeePassword'])
 
-		# Route the request in a way apiRequest.js can understand it
 		if (employee.exists()):
+			# Create a new session for the active employee if one does not already exist
+			if (not request.session.session_key):
+				request.session.create()
+
+			# Set the employeeID as a session variable. This is required for the signOff function
+			request.session['employeeID'] = employeeData['employeeID']
+
 			# Get information about the user who just signed into the system
 			activeEmployee = Employee.objects.get(employeeID=employeeData['employeeID'])
 
-			# Combine the FirstName and LastName into one variable
+			# Combine the FirstName and LastName into one variable to make the active name
 			activeName = ('{} {}').format(str(activeEmployee.employeeFirstName), str(activeEmployee.employeeLastName))
 
-			# Delete any orphaned active sessions the user may have left behind
-			activeSessionCheck = ActiveUser.objects.filter(activeEmployeeUUID=activeEmployee.employeeUUID).delete()
+			# Check if the employee already has an ActiveUser database record
+			activeSessionCheck = ActiveUser.objects.filter(activeEmployeeUUID=activeEmployee.employeeUUID)
 
-			# Create a new session for the active user.
-			if (not request.session.session_key):
-				request.session['employeeID'] = activeEmployee.employeeID
-				request.session.create()
 
-			# Update the employees active status
-			activeEmployee.employeeActive = True
-			activeEmployee.save()
+			if (activeSessionCheck.exists()):
+				# Update the employees ActiveUser session key
+				ActiveUser.objects.filter(activeEmployeeUUID=activeEmployee.employeeUUID).update(activeSessionKey=request.session.session_key)
+			else:
+				# Create a new ActiveUser database record for the employee
+				activeUser = ActiveUser.objects.create(activeEmployeeUUID=activeEmployee.employeeUUID,
+														activeName=activeName,
+														activeClassification=activeEmployee.employeeClassification,
+														activeSessionKey=request.session.session_key)
 
-			# Place the user in the ActiveUsers database
-			activeUser = ActiveUser.objects.create(activeEmployeeUUID=activeEmployee.employeeUUID,
-													activeName=activeName,
-													activeClassification=activeEmployee.employeeClassification,
-													activeSessionKey=request.session.session_key)
+			# Mark the employee as active
+			Employee.objects.filter(employeeID=activeEmployee.employeeID).update(employeeActive=True)
 
+			# The request was successful. Return status code 200 OK back to apiRequests.js
 			return HttpResponse({}, status=200)
 		else:
+			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
 			return HttpResponse({}, status=403)
 
 	# Transforms signin.html into an httpResponse object gunicorn can render as a web page
 	return render(request, 'signin.html', {'employees': Employee.objects.all()})
 
-
+# Process all client requests made to the signOff page
 def signOff(request):
 	# Only try to clean up if there is an active session
-	if ('employeeID' in request.session):
-		# Delete the active user session
-		activeUser = ActiveUser.objects.filter(activeSessionKey=request.session.session_key).delete()
+	if (request.session.session_key):
+		# Delete the employee from the ActiveUsers database
+		ActiveUser.objects.filter(activeSessionKey=request.session.session_key).delete()
 
-		# Check for the active users employee records
-		checkStatus = Employee.objects.filter(employeeID=request.session['employeeID'])
-
-		# Update the employees active status if there is a record of it
-		if (checkStatus.exists()):
-			updateEmployeeStatus = Employee.objects.get(employeeID=request.session['employeeID'])
-			updateEmployeeStatus.employeeActive = False
-			updateEmployeeStatus.save()
+		# Mark the employee as inactive
+		checkStatus = Employee.objects.filter(employeeID=request.session['employeeID']).update(employeeActive=False)
 
 		# Call Djangos built-in logout function to delete session information
 		logout(request)
@@ -176,6 +197,7 @@ def signOff(request):
 	return HttpResponseRedirect('/signIn')
 
 
+# Process all client requests for the main menu
 def registerMenu(request):
 	return render(request, 'registerMenu.html')
 

@@ -39,11 +39,10 @@
     {% if employees.exists %}
       <form action="javascript:validateSignIn();">
           <label for="employeeID">Employee ID:</label>
-          <input type="number" id="employeeID" name="employeeID" value=""><br>
+          <input type="number" id="employeeID" name="employeeID" value="" required><br>
           <label for="employeePassword">Employee Password:</label>
-          <input type="password" id="employeePassword" name="employeePassword" value=""><br><br>
+          <input type="password" id="employeePassword" name="employeePassword" value="" required><br><br>
           <input type="submit" value="Sign In" class="button productDetailsBlueButton">
-          <button type="button" class="button productDetailsGreenButton" onclick="window.location.href='/'";>Return Home</button>
           {% csrf_token %}
       </form>
     {% else %}
