@@ -14,10 +14,10 @@
         function validateSignIn() {
             employeeID = document.getElementById("employeeID").value;
             employeePassword = document.getElementById("employeePassword").value;
-            if (isNaN(employeeID) || employeeID == "" || employeePassword == "") {
+            if (isNaN(employeeID) || employeeID == " " || employeePassword == " ") {
                 document.getElementById('statusBox').style.background = '#f44336';
                 document.getElementById('statusBox').style.display = 'block';
-                document.getElementById('status').innerHTML = 'Bad username or password.';
+                document.getElementById('status').innerHTML = 'Bad username or password';
                 setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
             } else {
               registerSignIn();

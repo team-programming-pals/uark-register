@@ -1,11 +1,11 @@
 """
 Helpful Resources:
 
-    1. https://docs.djangoproject.com/en/3.1/topics/settings/
-    2. https://docs.djangoproject.com/en/3.1/ref/databases/
-    3. https://docs.djangoproject.com/en/3.1/intro/tutorial01/
-    4. https://devcenter.heroku.com/articles/getting-started-with-python
-    5. https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+	1. https://docs.djangoproject.com/en/3.1/topics/settings/
+	2. https://docs.djangoproject.com/en/3.1/ref/databases/
+	3. https://docs.djangoproject.com/en/3.1/intro/tutorial01/
+	4. https://devcenter.heroku.com/articles/getting-started-with-python
+	5. https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 """
 
 import django_heroku
@@ -37,27 +37,27 @@ ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '[::1]', '.herokuapp.com']
 
 # Applications registered with Django
 INSTALLED_APPS = [
-    'register.apps.RegisterConfig',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
+	'register.apps.RegisterConfig',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	'rest_framework',
 ]
 
 
 # Django plugins that extend what the framrwork can do
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'whitenoise.middleware.WhiteNoiseMiddleware',
+	'django.middleware.security.SecurityMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 
@@ -67,19 +67,19 @@ ROOT_URLCONF = 'programmingpals.urls'
 
 # This is the system Django uses to processs our templates
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+	{
+		'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		'DIRS': [],
+		'APP_DIRS': True,
+		'OPTIONS': {
+			'context_processors': [
+				'django.template.context_processors.debug',
+				'django.template.context_processors.request',
+				'django.contrib.auth.context_processors.auth',
+				'django.contrib.messages.context_processors.messages',
+			],
+		},
+	},
 ]
 
 
@@ -94,26 +94,25 @@ your code to GitHub
 Failure to follow this rule will cause our live demo to eventually break and
 will expose our database username/password to anyone who looks at the code
 """
-#DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
+DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
 # You can comment out the database entry above and add a new entry below this line for local testing
-#DATABASES = {'default': dj_database_url.config(default='DATABASE_URL_GOES_HERE)}
-
+#DATABASES = {'default': dj_database_url.config(default='DATABASE_URL_GOES_HERE')}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+	{
+		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+	},
 ]
 
 
@@ -140,7 +139,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
-    path.join(BASE_DIR, 'static'),
+	path.join(BASE_DIR, 'static'),
 )
 
 
