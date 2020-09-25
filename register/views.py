@@ -103,42 +103,42 @@ def signIn(request, errorMessage='default'):
 	# Listen for incoming POST requests
 	if request.method == 'POST':
 
-		# Grab the username and password from apiRequest.js
-		employeeData = json.loads(request.body)
+		# Grab the username and password from the signIn form
+		employeeID = request.POST.get('employeeID')
+		employeePassword = request.POST.get('employeePassword')
 
 		# EmployeeID must be an integer
-		if (employeeData['employeeID'].isdigit() == False):
-			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
-			return HttpResponse(json.dumps('Register Error: An employeeID must be a positive integer'), status=403)
+		if (str(employeeID).isdigit() == False):
+			# The request failed. Return to the signIn page with an appropriate error message
+			errorMessage = 'Register Error: An employeeID must be a positive integer'
+			return render(request, 'signin.html', {'employees': Employee.objects.all(), 'errorMessage': errorMessage})
 
 		# Do not accept a blank employeeID
-		if (employeeData['employeeID'] == ''):
-			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
-			return HttpResponse(json.dumps('Register Error: You must enter an employeeID.'), status=403)
+		if (employeeID == ''):
+			# The request failed. Return to the signIn page with an appropriate error message
+			errorMessage = 'Register Error: You must enter an employeeID.'
+			return render(request, 'signin.html', {'employees': Employee.objects.all(), 'errorMessage': errorMessage})
 
 		# Do not accept a blank password
-		if (employeeData['employeePassword'] == ''):
-			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
-			return HttpResponse(json.dumps('Register Error: You must enter a password.'), status=403)
+		if (employeePassword == ''):
+			# The request failed. Return to the signIn page with an appropriate error message
+			errorMessage = 'Register Error: You must enter a password.'
+			return render(request, 'signin.html', {'employees': Employee.objects.all(), 'errorMessage': errorMessage})
 
 		# Check if an employee account with the provided employeeID and password exists
-		employee = Employee.objects.filter(employeeID=employeeData['employeeID'], 
-											employeePassword=employeeData['employeePassword'])
+		employee = Employee.objects.filter(employeeID=employeeID, employeePassword=employeePassword)
 
 		if (employee.exists()):
+
 			# Create a new session for the active employee if one does not already exist
-			if (not request.session.session_key):
-				request.session.create()
+			if (not request.session.session_key or request.session.session_key == None):
+				request.session.save()
 
-			# Do not let orphaned sessions break the register
-			if (request.session.session_key == None):
-				request.session.create()
-
-			# Set the employeeID as a session variable. This is required for the signOff function
-			request.session['employeeID'] = employeeData['employeeID']
+			# Set the employeeID as a session variable.
+			request.session['employeeID'] = employeeID
 
 			# Get information about the user who just signed into the system
-			activeEmployee = Employee.objects.get(employeeID=employeeData['employeeID'])
+			activeEmployee = Employee.objects.get(employeeID=employeeID)
 
 			# Combine the FirstName and LastName into one variable to make the active name
 			activeName = ('{} {}').format(str(activeEmployee.employeeFirstName), str(activeEmployee.employeeLastName))
@@ -161,10 +161,11 @@ def signIn(request, errorMessage='default'):
 			Employee.objects.filter(employeeID=activeEmployee.employeeID).update(employeeActive=True)
 
 			# The request was successful. Return status code 200 OK back to apiRequests.js
-			return HttpResponse({}, status=200)
+			return registerMenu(request)
 		else:
-			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
-			return HttpResponse({json.dumps('Register Error: Incorrect username or password')}, status=403)
+			# The request failed. Return to the signIn page with an appropriate error message
+			errorMessage = "Invalid employeeID or password."
+			return render(request, 'signin.html', {'employees': Employee.objects.all(), 'errorMessage': errorMessage})
 
 	# Transforms signin.html into an httpResponse object gunicorn can render as a web page
 	return render(request, 'signin.html', {'employees': Employee.objects.all(), 'errorMessage': errorMessage})

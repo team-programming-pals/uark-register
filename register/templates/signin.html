@@ -11,13 +11,12 @@
 	<script>
 		//Validate sign-in
 		function validateSignIn() {
+			alert('hello');
 			employeeID = document.getElementById("employeeID").value;
 			employeePassword = document.getElementById("employeePassword").value;
 			if (isNaN(employeeID) || employeeID == " " || employeePassword == " ") {
 				displayMessage('Register Error: All form fields are required.', 'failed');
-			} else {
-			  registerSignIn();
-			}
+				return true;
 		}
 
 	</script>
@@ -44,7 +43,7 @@
 	{% endif %}
 
 	{% if employees.exists %}
-	  <form action="javascript:validateSignIn();">
+	  <form action="/signIn/" method="POST" onclick="javascript:validateSignIn();">
 		  <label for="employeeID">Employee ID:</label>
 		  <input type="number" id="employeeID" name="employeeID" value="" required><br>
 		  <label for="employeePassword">Employee Password:</label>
@@ -58,6 +57,7 @@
 	  </script>
 	{% endif %}
 
+	<div><p> You can take a look at our API end-points by visiting <a href="/api/">THIS LINK </a></p></div>
 </body>
 
 </html>

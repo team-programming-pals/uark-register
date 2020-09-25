@@ -27,6 +27,9 @@ secret key.
 SECRET_KEY = getenv("SECRET_KEY", "!!SECRET_KEY_ENVIRONMENT_VARIBLE_NOT_SET!!")
 
 
+# Make Django use cookie-based sessions
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+
 # Set DEBUG to False before pushing to GitHub. Set it to true for local testing though
 DEBUG = True
 
