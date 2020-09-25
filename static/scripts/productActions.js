@@ -1,3 +1,9 @@
+// =======================================================================
+// Title:   productActions.js 
+// Purpose: Functions performing actions with product forms
+// Date:    September 2020
+// ========================================================================
+
 // Grab the product id from the form sending the request
 function getProductUUID() {
 	return document.getElementById("productUUID").value;
@@ -12,9 +18,45 @@ function getProductCode() {
 
 // Grab the product count from the form sending the request
 function getProductCount() {
-	return Number(document.getElementById("productCount").value);
+	return document.getElementById("productCount").value;
 }
 
+function validateProduct(getter){
+	//takes in getter and checks for null values, returns the getter
+	if (getter == 0)
+	{
+		return getter;
+	}
+	else if((getter.length) == 0) {
+        return false;
+    } else {
+        return getter;
+    }
+}
+
+function Create(){
+	//validation function for creating products
+	if((validateProduct(getProductCode()))&&(validateProduct(getProductCount())))
+	{
+		createProduct();
+		return;
+	}
+	else{
+		return;
+	}		
+}
+
+function Submit(){
+	//validation function for updating product
+	if((validateProduct(getProductCode()))&&(validateProduct(getProductCount()))&&(validateProduct(getProductUUID())))
+	{
+		updateProduct();
+		return;
+	}
+	else{
+		return;
+	}		
+}
 
 // Add a new product to the database
 function createProduct() {
