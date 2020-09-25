@@ -27,8 +27,9 @@ function validateProduct(getter){
 	{
 		return getter;
 	}
-	else if((getter.length) == 0) {
-        return false;
+	else if(((getter.length) == 0)||(getter.length > 31)){
+        alert("Invalid entry; make sure all fields are filled \nand product name is less than 32 characters.");
+		return false;
     } else {
         return getter;
     }
@@ -42,6 +43,7 @@ function Create(){
 		return;
 	}
 	else{
+		
 		return;
 	}		
 }
@@ -54,6 +56,7 @@ function Submit(){
 		return;
 	}
 	else{
+		
 		return;
 	}		
 }
