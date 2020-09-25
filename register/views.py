@@ -174,7 +174,7 @@ def signOff(request):
 		ActiveUser.objects.filter(activeSessionKey=request.session.session_key).delete()
 
 		# Mark the employee as inactive
-		checkStatus = Employee.objects.filter(employeeID=request.session['employeeID']).update(employeeActive=False)
+		Employee.objects.filter(employeeID=request.session['employeeID']).update(employeeActive=False)
 
 		# Call Djangos built-in logout function to delete session information
 		logout(request)
