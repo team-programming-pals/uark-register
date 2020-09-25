@@ -24,11 +24,10 @@ named "SECRET_KEY" on Heroku. When the web application is ran locally, it will
 default to using "!!SECRET_KEY_ENVIRONMENT_VARIBLE_NOT_SET!!" as a temporary
 secret key.
 """
-SECRET_KEY = getenv("SECRET_KEY", "!!SECRET_KEY_ENVIRONMENT_VARIBLE_NOT_SET!!")
+SECRET_KEY = getenv("SECRET_KEY", "Pals")
 
-
-# Make Django use cookie-based sessions
-SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+# Make Django use file-based sessions
+SESSION_ENGINE = "django.contrib.sessions.backends.file"
 
 # Set DEBUG to False before pushing to GitHub. Set it to true for local testing though
 DEBUG = True
@@ -101,6 +100,7 @@ DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
 # You can comment out the database entry above and add a new entry below this line for local testing
 #DATABASES = {'default': dj_database_url.config(default='DATABASE_URL_GOES_HERE')}
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
