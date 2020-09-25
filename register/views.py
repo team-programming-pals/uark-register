@@ -12,8 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework import viewsets
 from .serializers import productSerializer, employeeSerializer, ActiveUserSerializer
 from .models import Product, Employee, ActiveUser
-import hashlib
-import json
+from uuid import uuid4
 
 # Process all client requests made to our product API
 class productViewSet(viewsets.ModelViewSet):
@@ -130,18 +129,32 @@ def signIn(request, errorMessage='default'):
 
 		if (employee.exists()):
 
-			# Create a new session for the active employee if one does not already exist
-			if (not request.session.session_key or request.session.session_key == None):
-				request.session.save()
-
-			# Set the employeeID as a session variable.
-			request.session['employeeID'] = employeeID
-
 			# Get information about the user who just signed into the system
 			activeEmployee = Employee.objects.get(employeeID=employeeID)
 
 			# Combine the FirstName and LastName into one variable to make the active name
 			activeName = ('{} {}').format(str(activeEmployee.employeeFirstName), str(activeEmployee.employeeLastName))
+
+			"""
+			Attempting to use a Django session key as the activeSessionKey proved to be
+			really unreliable. It caused all kinds of unexpected behavior because at
+			seemingly random times, Django would return null for the session key
+			and that would break everything because the database does not allow
+			the activeSessionKey to be null. So, I am getting around this problem
+			by generating a random activeSessionKey and passing it around as a 
+			Django session variable. This is far more reliable and it still allows
+			the register to use Django to track the employees session without
+			any issues.
+			"""
+			activeSessionKey = uuid4().hex
+
+			if (not request.session.session_key):
+				request.session.create()
+				request.session.save()
+			
+			# Create session variables. These are used in the signOff function.
+			request.session['employeeID'] = employeeID
+			request.session['activeKey'] = activeSessionKey
 
 			# Check if the employee already has an ActiveUser database record
 			activeSessionCheck = ActiveUser.objects.filter(activeEmployeeUUID=activeEmployee.employeeUUID)
@@ -149,18 +162,18 @@ def signIn(request, errorMessage='default'):
 
 			if (activeSessionCheck.exists()):
 				# Update the employees ActiveUser session key
-				ActiveUser.objects.filter(activeEmployeeUUID=activeEmployee.employeeUUID).update(activeSessionKey=request.session.session_key)
+				ActiveUser.objects.filter(activeEmployeeUUID=activeEmployee.employeeUUID).update(activeSessionKey=activeSessionKey)
 			else:
 				# Create a new ActiveUser database record for the employee
 				activeUser = ActiveUser.objects.create(activeEmployeeUUID=activeEmployee.employeeUUID,
 														activeName=activeName,
 														activeClassification=activeEmployee.employeeClassification,
-														activeSessionKey=request.session.session_key)
+														activeSessionKey=activeSessionKey)
 
 			# Mark the employee as active
 			Employee.objects.filter(employeeID=activeEmployee.employeeID).update(employeeActive=True)
 
-			# The request was successful. Return status code 200 OK back to apiRequests.js
+			# The employee signed into the register. Redirect them to the main menu
 			return registerMenu(request)
 		else:
 			# The request failed. Return to the signIn page with an appropriate error message
@@ -176,7 +189,7 @@ def signOff(request):
 	# Only try to clean up if there is an active session
 	if (request.session.session_key):
 		# Delete the employee from the ActiveUsers database
-		ActiveUser.objects.filter(activeSessionKey=request.session.session_key).delete()
+		ActiveUser.objects.filter(activeSessionKey=request.session['activeKey']).delete()
 
 		# Mark the employee as inactive
 		Employee.objects.filter(employeeID=request.session['employeeID']).update(employeeActive=False)

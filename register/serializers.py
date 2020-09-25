@@ -5,7 +5,6 @@ Helpful Resources:
 """
 from rest_framework import serializers
 from .models import Product, Employee, ActiveUser
-import hashlib
 
 
 # Create a serializer for our product API endpoint

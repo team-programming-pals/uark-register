@@ -27,7 +27,7 @@ secret key.
 SECRET_KEY = getenv("SECRET_KEY", "Pals")
 
 # Make Django use file-based sessions
-SESSION_ENGINE = "django.contrib.sessions.backends.file"
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
 # Set DEBUG to False before pushing to GitHub. Set it to true for local testing though
 DEBUG = True
@@ -100,7 +100,6 @@ DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
 # You can comment out the database entry above and add a new entry below this line for local testing
 #DATABASES = {'default': dj_database_url.config(default='DATABASE_URL_GOES_HERE')}
-
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
