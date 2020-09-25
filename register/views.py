@@ -130,6 +130,10 @@ def signIn(request, errorMessage='default'):
 			if (not request.session.session_key):
 				request.session.create()
 
+			# Do not let orphaned sessions break the register
+			if (request.session.session_key == None):
+				request.session.create()
+
 			# Set the employeeID as a session variable. This is required for the signOff function
 			request.session['employeeID'] = employeeData['employeeID']
 
