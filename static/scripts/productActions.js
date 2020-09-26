@@ -28,8 +28,7 @@ function validateProduct(getter){
 		return getter;
 	}
 	else if((getter.length == 0)||(getter.length > 31)){
-        alert(getter.length);
-		alert(getter);
+        
 		alert("Invalid entry; make sure all fields are filled \nand product name is less than 32 characters.");
 		return false;
 	}
