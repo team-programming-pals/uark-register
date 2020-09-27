@@ -99,7 +99,7 @@ will expose our database username/password to anyone who looks at the code
 DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
 # You can comment out the database entry above and add a new entry below this line for local testing
-#DATABASES = {'default': dj_database_url.config(default='DATABASE_URL_GOES_HERE')}
+#DATABASES = {'default': dj_database_url.config(default='')}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [

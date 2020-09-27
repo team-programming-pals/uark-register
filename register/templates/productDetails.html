@@ -2,32 +2,33 @@
 <html>
 
 <head>
-	 <title>Uark Register - {{ product.productCode }}</title>
-	 {% load static %}
-	 <script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}"></script>
-	 <script type="text/javascript" src="{% static 'scripts/productActions.js' %}"></script>
-	 <script type="text/javascript" src="{% static 'scripts/siteActions.js.js' %}"></script>
-	 <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
+	<title>Uark Register - {{ product.productCode }}</title>
+	{% load static %}
+	<script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}"></script>
+	<script type="text/javascript" src="{% static 'scripts/productActions.js' %}"></script>
+	<script type="text/javascript" src="{% static 'scripts/siteActions.js.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
 </head>
 
 <body>
 
-		<h1>Product Details</h1>
-		<div id='statusBox'>
-			<p id="status"></p>
-		</div>
+	<h1>Product Details</h1>
+	<div id='statusBox'>
+		<p id="status"></p>
+	</div>
 
-		{% if product.productUUID %}
-		<form action="javascript:Submit();">
-				<label for="productCode">Product Name:</label>
-				<input type="text" id="productCode" name="productCode" value="{{ product.productCode }}" required><br>
-				<label for="productCount">Product QTY:</label>
-				<input type="number" id="productCount" name="productCount" value="{{ product.productCount }}" required><br><br>
-				<input type="hidden" id="productUUID" name="productUUID" value="{{ product.productUUID }}">
-				<input type="submit" value="Save" class="button productDetailsBlueButton">
-				{% csrf_token %}
-		</form> 
-		{% endif %}
+	{% if product.productUUID %}
+	<form action="javascript:Submit();">
+		<label for="productCode">Product Name:</label>
+		<input type="text" id="productCode" name="productCode" value="{{ product.productCode }}" required><br>
+		<label for="productCount">Product QTY:</label>
+		<input type="number" id="productCount" name="productCount" value="{{ product.productCount }}" required><br><br>
+		<input type="hidden" id="productUUID" name="productUUID" value="{{ product.productUUID }}">
+		<!-- class="button signIn" works too, whichever looks better -->
+		<input type="submit" value="Save" class="button center">
+		{% csrf_token %}
+	</form> 
+	{% endif %}
 		
 </body>
 </html>
