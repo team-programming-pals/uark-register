@@ -19,14 +19,17 @@
 
 	{% if product.productUUID %}
 	<form action="javascript:Submit();">
-		<label for="productCode">Product Name:</label>
-		<input type="text" id="productCode" name="productCode" value="{{ product.productCode }}" required><br>
-		<label for="productCount">Product QTY:</label>
-		<input type="number" id="productCount" name="productCount" value="{{ product.productCount }}" required><br><br>
-		<input type="hidden" id="productUUID" name="productUUID" value="{{ product.productUUID }}">
-		<!-- class="button signIn" works too, whichever looks better -->
-		<input type="submit" value="Save" class="button center">
-		{% csrf_token %}
+		<div class="container">
+			<label for="productCode">Product Name:</label>
+			<input type="text" id="productCode" name="productCode" value="{{ product.productCode }}" required><br>
+			<label for="productCount">Product QTY:</label>
+			<input type="number" id="productCount" name="productCount" value="{{ product.productCount }}" required><br><br>
+			<input type="hidden" id="productUUID" name="productUUID" value="{{ product.productUUID }}">
+			<!-- class="button signIn" works too, whichever looks better -->
+			<hr>
+			<input type="submit" value="Save" class="button extend">
+			{% csrf_token %}
+		</div>
 	</form> 
 	{% endif %}
 		

@@ -29,31 +29,34 @@
 	</section>
 	
 	<form action="" method="post">
-		<input type="hidden" id="employeerecordID" name="employeerecordID"><br>
-		
-		<label for="employeeID">Employee ID:</label>
-		<input type="text" id="employeeID" name="employeeID" disabled><br><br>
-		
-		<label for="fname">First name:</label>
-		<input type="text" id="firstname" name="firstname"><br><br>
-		
-		<label for="lname">Last name:</label>
-		<input type="text" id="lastname" name="lastname"><br><br>
-		
-		<label for="ePassword">Password:</label>
-		<input type="text" id="employeePassword" name="employeePassword"><br><br>
-		
-		<label for="cPassword">Confimr Password:</label>
-		<input type="text" id="confirmPassword" name="confirmPassword"><br><br>
-		
-		<label for="eType">Select employee type:</label>
-		<select name="employeeType" id="employeeType">
-			<option value="Cashier">Cashier</option>
-			<option value="ShiftManager">Shift Manager</option>
-			<option value="GeneralManager">General Manager</option>
-		</select><br><br>
-		
-		<button type="button" class="button signIn">Save</button>
+		<div class="container">
+			<hr>
+			<input type="hidden" id="employeerecordID" name="employeerecordID"><br>
+			
+			<label for="employeeID">Employee ID:</label>
+			<input type="text" id="employeeID" name="employeeID" disabled><br><br>
+			
+			<label for="fname">First name:</label>
+			<input type="text" id="firstname" name="firstname"><br><br>
+			
+			<label for="lname">Last name:</label>
+			<input type="text" id="lastname" name="lastname"><br><br>
+			
+			<label for="ePassword">Password:</label>
+			<input type="text" id="employeePassword" name="employeePassword"><br><br>
+			
+			<label for="cPassword">Confirm Password:</label>
+			<input type="text" id="confirmPassword" name="confirmPassword"><br><br>
+			
+			<label for="eType">Select employee type:</label>
+			<select name="employeeType" id="employeeType">
+				<option value="Cashier">Cashier</option>
+				<option value="ShiftManager">Shift Manager</option>
+				<option value="GeneralManager">General Manager</option>
+			</select><br><br>
+			<hr>
+			<button type="button" class="button extend">Save</button>
+		</div>
 	</form>
 	
 </body>

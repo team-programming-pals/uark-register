@@ -27,40 +27,47 @@
 
 <body>
 
-	<h1>Uark Register - Sign In</h1>
-	<div id='statusBox'>
-		<p id="status"></p>
+	<h1>Uark Register</h1>
+	<div class="container">
+		<h2 class="head">Sign In</h2>
+		<hr>
+		<div id='statusBox'>
+			<p id="status"></p>
+		</div>
+
+		<!-- I could not get displayMessage() to work with the Django template variable
+			so I ended up just displaying the error message like this so I could move on -->
+		{% if errorMessage != 'default' %}
+		<script>
+			document.getElementById('statusBox').style.background = '#f44336';
+			document.getElementById('statusBox').style.display = "block";
+			document.getElementById('status').innerHTML = "{{ errorMessage }}";
+			setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
+		</script>
+		{% endif %}
+
+		{% if employees.exists %}
+		<form action="/signIn/" method="POST" onclick="javascript:validateSignIn();">
+			<label for="employeeID">Employee ID:</label>
+			<input type="number" id="employeeID" name="employeeID" value="" required><br>
+			<label for="employeePassword">Employee Password:</label>
+			<input type="password" id="employeePassword" name="employeePassword" value="" required>
+			<hr>
+			<input type="submit" value="Sign In" class="button extend">
+			{% csrf_token %}
+		</form>
+		{% else %}
+		<script>
+			window.location.href='/employeeDetails';
+		</script>
+		{% endif %}
 	</div>
 
-	<!-- I could not get displayMessage() to work with the Django template variable
-		so I ended up just displaying the error message like this so I could move on -->
-	{% if errorMessage != 'default' %}
-	<script>
-		document.getElementById('statusBox').style.background = '#f44336';
-		document.getElementById('statusBox').style.display = "block";
-		document.getElementById('status').innerHTML = "{{ errorMessage }}";
-		setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
-	</script>
-	{% endif %}
+	<div class="container bottom">
+		<p> You can take a look at our API end-points by visiting <a href="/api/">THIS LINK </a></p>
+	</div>
 
-	{% if employees.exists %}
-	  <form action="/signIn/" method="POST" onclick="javascript:validateSignIn();">
-		  <label for="employeeID">Employee ID:</label>
-		  <input type="number" id="employeeID" name="employeeID" value="" required><br>
-		  <label for="employeePassword">Employee Password:</label>
-		  <input type="password" id="employeePassword" name="employeePassword" value="" required><br><br>
-		  <input type="submit" value="Sign In" class="button signIn">
-		  {% csrf_token %}
-	  </form>
-	{% else %}
-	  <script>
-		window.location.href='/employeeDetails';
-	  </script>
-	{% endif %}
-
-	<div><p> You can take a look at our API end-points by visiting <a href="/api/">THIS LINK </a></p></div>
 </body>
-
 </html>
 
 

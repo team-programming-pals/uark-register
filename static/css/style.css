@@ -33,6 +33,12 @@ body {
     text-align: center;
 }
 
+/* Heading for containers */
+.head {
+    font-size: 24px;
+    text-align: left;
+}
+
 /* Heading banner (ex. Main Menu) */
 .banner {
     padding: 80px;
@@ -89,21 +95,39 @@ a:active {
     background-color: var(--red-color);
 }
 
+/* Container (Ex. SignIn, Create employee) */
+.container {
+    width: 50%;
+    margin: auto;
+    padding: 16px;
+    background-color: var(--primary-text-color);
+}
+/* Set a grey background color and center the text of the "sign in" section */
+.bottom {
+    background-color: #dbdbdb;
+    text-align: center;
+}
+
+/* Overwrite default styles of hr */
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+}
+
 /* Label fields for forms */
 label {
-    display: inline-block;
     padding: 5px 0 0;
+    float: left;
     margin: 5px;
-    width: 250px;
-    text-align: right;
     font-weight: bold;
 }
 
 /* Make the input fields look better */
 input{
 	display: inline-block;
-	padding: 24px 32px;
-	margin: 10px 8px;
+    padding: 15px;
+    width: 100%;
+	margin: 5px 0 22px 0;
 	outline: none;
 	box-sizing: border-box;
 	font-size: 16px;
@@ -121,6 +145,7 @@ select {
     color: var(--primary-text-color);
     padding: 8px 16px;
     font-size: 20px;
+    display: inline-block;
 }
 
 /* Product Cards */
@@ -177,10 +202,11 @@ select {
     display: inline-block;
     margin-top: 1rem;
 }
-.signIn { /* SignIn button */
+.extend { /* Edge to edge */
     font-size: 16px;
     display: inline-block;
     padding: 20px 100px;
+    width: 100%;
 }
 .product { /* Product card inner button */
     font-size: 16px;
