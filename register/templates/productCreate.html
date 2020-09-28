@@ -17,6 +17,16 @@
 		<p id="status"></p>
 	</div>
 	
+
+	{% if queryString != 'default' and queryType == 'error' %}
+		<script>
+			document.getElementById('statusBox').style.background = '#FFCCCC';
+			document.getElementById('statusBox').style.display = "block";
+			document.getElementById('status').innerHTML = "{{ queryString }}";
+			setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
+		</script>
+	{% endif %}
+	
 	<form action="javascript:Create();">
 		<label for="productCode">Product Name:</label>
 		<input type="text" id="productCode" name="productCode" value="" required><br>

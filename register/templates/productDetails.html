@@ -6,7 +6,7 @@
 	{% load static %}
 	<script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}"></script>
 	<script type="text/javascript" src="{% static 'scripts/productActions.js' %}"></script>
-	<script type="text/javascript" src="{% static 'scripts/siteActions.js.js' %}"></script>
+	<script type="text/javascript" src="{% static 'scripts/siteActions.js' %}"></script>
 	<link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
 </head>
 
@@ -16,6 +16,16 @@
 	<div id='statusBox'>
 		<p id="status"></p>
 	</div>
+
+
+	{% if queryString != 'default' and queryType == 'error' %}
+		<script>
+			document.getElementById('statusBox').style.background = '#FFCCCC';
+			document.getElementById('statusBox').style.display = "block";
+			document.getElementById('status').innerHTML = "{{ queryString }}";
+			setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
+		</script>
+	{% endif %}
 
 	{% if product.productUUID %}
 	<form action="javascript:Submit();">

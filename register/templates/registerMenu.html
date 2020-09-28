@@ -26,14 +26,31 @@
         </a>
     </section>
 
+
+    <div id='statusBox'>
+        <p id="status"></p>
+    </div>
+
+
+    {% if queryString != 'default' and queryType == 'error' %}
+        <script>
+            document.getElementById('statusBox').style.background = '#FFCCCC';
+            document.getElementById('statusBox').style.display = "block";
+            document.getElementById('status').innerHTML = "{{ queryString }}";
+            setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
+        </script>
+    {% endif %}
+
     <!--FIX!!! Don't know where to redirect some pages to-->
     <!--FIX!!! Manager viewing only-->
     <div class="grid">
-        <button class="button" onclick="window.location.href='';">Start Transaction</button>
+        <button class="button" onclick="alert('Functionality has not yet been implemented.');">Start Transaction</button>
         <button class="button" onclick="window.location.href='/productListing';">View Products</button>
+        {% if request.session.employeeClassification > 0 %}
         <button class="button" onclick="window.location.href='/employeeDetails';">Create Employee</button>
-        <button class="button" onclick="window.location.href='';">Sales Report</button>
-        <button class="button" onclick="window.location.href='';">Cashier Report</button>
+        <button class="button" onclick="alert('Functionality has not yet been implemented.');">Sales Report</button>
+        <button class="button" onclick="alert('Functionality has not yet been implemented.');">Cashier Report</button>
+        {% endif %}
     </div>
 </body>
 </html>

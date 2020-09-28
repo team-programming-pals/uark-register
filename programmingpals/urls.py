@@ -32,7 +32,10 @@ urlpatterns = [
 	path('productDetails/<uuid:productUUID>/', views.productDetails, name='productDetails'),
 	path('productCreate/', views.productCreate, name='productCreate'),
 
+	path('employeeDetails/<int:queryString>/', views.employeeDetails, name='employeeDetails'),
 	path('employeeDetails/', views.employeeDetails, name='employeeDetails'),
+	path('employeeCreate/', views.employeeCreate, name='employeeCreate'),
+	path('employeeUpdate/', views.employeeUpdate, name='employeeUpdate'),
 	path('signIn/', views.signIn, name='signIn'),
 	path('signOff/', views.signOff, name='signOff'),
 

@@ -32,8 +32,25 @@
         </a>
 	</section>
 	
+	<div id='statusBox'>
+		<p id="status"></p>
+	</div>
+
+
+	{% if queryString != 'default' and queryType == 'error' %}
+		<script>
+			document.getElementById('statusBox').style.background = '#FFCCCC';
+			document.getElementById('statusBox').style.display = "block";
+			document.getElementById('status').innerHTML = "{{ queryString }}";
+			setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
+		</script>
+	{% endif %}
+
+	{% if request.session.employeeClassification > 0 %}
+	<!-- Only show the create button for managers -->
 	<div><button class="button center" onclick="window.location.href='/productCreate';">Create New</button></div><br />
-		
+	{% endif %}
+
 	<section class="productCard">
 	{% for product in products %}
 		<article class="card">

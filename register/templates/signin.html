@@ -8,6 +8,10 @@
 	<script type="text/javascript" src="{% static 'scripts/siteActions.js' %}"></script>
 	<link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
 
+	{% if not employees.exists %}
+	<script>window.location.href='/employeeDetails';</script>
+	{% endif %}
+
 	<script>
 		//Validate sign-in
 		function validateSignIn() {
@@ -35,13 +39,11 @@
 			<p id="status"></p>
 		</div>
 
-		<!-- I could not get displayMessage() to work with the Django template variable
-			so I ended up just displaying the error message like this so I could move on -->
-		{% if errorMessage != 'default' %}
+		{% if queryString != 'default' and queryType == 'error' %}
 		<script>
-			document.getElementById('statusBox').style.background = '#f44336';
+			document.getElementById('statusBox').style.background = '#FFCCCC';
 			document.getElementById('statusBox').style.display = "block";
-			document.getElementById('status').innerHTML = "{{ errorMessage }}";
+			document.getElementById('status').innerHTML = "{{ queryString }}";
 			setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
 		</script>
 		{% endif %}
@@ -49,22 +51,18 @@
 		{% if employees.exists %}
 		<form action="/signIn/" method="POST" onclick="javascript:validateSignIn();">
 			<label for="employeeID">Employee ID:</label>
+			{% if employeeID != 0 %}
+			<input type="number" id="employeeID" name="employeeID" value="{{ employeeID }}" required><br>
+			{% else %}
 			<input type="number" id="employeeID" name="employeeID" value="" required><br>
+			{% endif %}
 			<label for="employeePassword">Employee Password:</label>
 			<input type="password" id="employeePassword" name="employeePassword" value="" required>
 			<hr>
 			<input type="submit" value="Sign In" class="button extend">
 			{% csrf_token %}
 		</form>
-		{% else %}
-		<script>
-			window.location.href='/employeeDetails';
-		</script>
 		{% endif %}
-	</div>
-
-	<div class="container bottom">
-		<p> You can take a look at our API end-points by visiting <a href="/api/">THIS LINK </a></p>
 	</div>
 
 </body>

@@ -26,7 +26,7 @@ secret key.
 """
 SECRET_KEY = getenv("SECRET_KEY", "Pals")
 
-# Make Django use file-based sessions
+# Make Django use cookie-based sessions
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
 # Set DEBUG to False before pushing to GitHub. Set it to true for local testing though
@@ -84,7 +84,6 @@ TEMPLATES = [
 	},
 ]
 
-
 # Expose our web application to any WSGI-compliant web server
 WSGI_APPLICATION = 'programmingpals.wsgi.application'
 
@@ -100,6 +99,7 @@ DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
 # You can comment out the database entry above and add a new entry below this line for local testing
 #DATABASES = {'default': dj_database_url.config(default='')}
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -147,5 +147,3 @@ STATICFILES_DIRS = (
 
 # Heroku settings
 django_heroku.settings(locals())
-
-#Test comment for commit
