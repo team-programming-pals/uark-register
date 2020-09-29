@@ -12,7 +12,29 @@
 
 <body>
 
-	<h1>Product Details</h1>
+	<header class="banner small">
+		<h1>Product Details</h1>
+	</header>
+
+	<section class="navbar">
+        <a href="#" onclick="window.location.href='/registerMenu';">
+            <!--Home icon-->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18px" height="18px">
+                <path d="M0 0h24v24H0z" fill="none"/><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            Home
+		</a>
+		<a href="#" onclick="window.location.href='/productListing';">
+			Products
+		</a>
+        <a href="#" class="signout" onclick="window.location.href='/signOff';">
+            <!--Signout icon-->
+            <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" fill="white" width="18px" height="18px">
+                <g><rect fill="none" height="24" width="24"/></g>
+                <g><path d="M11,7L9.6,8.4l2.6,2.6H2v2h10.2l-2.6,2.6L11,17l5-5L11,7z M20,19h-8v2h8c1.1,0,2-0.9,2-2V5c0-1.1-0.9-2-2-2h-8v2h8V19z"/></g></svg>
+             Signout
+        </a>
+	</section>
+	
 	<div id='statusBox'>
 		<p id="status"></p>
 	</div>
@@ -30,18 +52,20 @@
 	{% if product.productUUID %}
 	<form action="javascript:Submit();">
 		<div class="container">
+			<hr>
 			<label for="productCode">Product Name:</label>
 			<input type="text" id="productCode" name="productCode" value="{{ product.productCode }}" required><br>
 			<label for="productCount">Product QTY:</label>
 			<input type="number" id="productCount" name="productCount" value="{{ product.productCount }}" required><br><br>
 			<input type="hidden" id="productUUID" name="productUUID" value="{{ product.productUUID }}">
-			<!-- class="button signIn" works too, whichever looks better -->
 			<hr>
 			<input type="submit" value="Save" class="button extend">
+			<button class="button delete" onclick="javascript:deleteProduct();window.location.href='/productListing';">Delete</button>
 			{% csrf_token %}
 		</div>
 	</form> 
 	{% endif %}
+	<br>
 		
 </body>
 </html>

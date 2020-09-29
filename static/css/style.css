@@ -97,7 +97,7 @@ a:active {
 
 /* Container (Ex. SignIn, Create employee) */
 .container {
-    width: 50%;
+    width: 35%;
     margin: auto;
     padding: 16px;
     background-color: var(--primary-text-color);
@@ -220,6 +220,21 @@ select {
 .product:hover {
     border: 2px solid var(--accent-color-highlight);
     background-color: var(--accent-color-highlight);
+}
+.delete { /* Delete button (Ex. Product Details page) */
+    font-size: 16px;
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 20px 100px;
+    width: 100%;
+    background-color: var(--red-color);
+    border: 2px solid var(--red-color);
+    opacity: 50%;
+}
+.delete:hover {
+    background-color: var(--red-color);
+    border: 2px solid var(--red-color);
+    opacity: 100%;
 }
 
 /* Font style for prices */

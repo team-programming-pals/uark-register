@@ -107,58 +107,69 @@
 		<!-- When the page has an EmployeeID passed in the URL and a manager
 		is visiting the page, render the employee update form for them -->
 		<form action="/employeeUpdate/" method="POST">
-		<input type="hidden" id="employeeUUID" name="employeeUUID" value="{{ employee.employeeUUID }}" required><br>
-		<input type="hidden" id="employeeID", name="employeeID" value="{{ employee.employeeID }}">
+			<div class="container">
+				<hr>
+				<input type="hidden" id="employeeUUID" name="employeeUUID" value="{{ employee.employeeUUID }}" required><br>
+				<input type="hidden" id="employeeID", name="employeeID" value="{{ employee.employeeID }}">
 
-		<label for="employeeID">Employee ID:</label>
-		<input type="text" id="employeeDisabledID" name="employeeDisabledID" value="{{ employee.employeeID }}" disabled><br><br>
-		
-		<label for="fname">First name:</label>
-		<input type="text" id="employeeFirstName" name="employeeFirstName" value="{{ employee.employeeFirstName }}" required><br><br>
-		
-		<label for="lname">Last name:</label>
-		<input type="text" id="employeeLastName" name="employeeLastName" value="{{ employee.employeeLastName }}" required><br><br>
-		
-		<label for="Password">Password:</label>
-		<input type="text" id="employeePassword" name="employeePassword" value="{{ employee.employeePassword }}" required><br><br>
-		
-		<label for="PasswordConfirm">Confirm Password:</label>
-		<input type="text" id="employeePasswordTest" name="employeePasswordTest" value="{{ employee.employeePassword }}" required><br><br>
-		
-		<label for="eType">Select employee type:</label>
-		<select name="employeeClassification" id="employeeClassification" required>
-			<option value=0>Cashier</option>
-			<option value=1>Shift Manager</option>
-			<option value=2>General Manager</option>
-		</select><br><br>
-		{% csrf_token %}
-		<button type="submit" class="button signIn">Save</button>
+				<label for="employeeID">Employee ID:</label>
+				<input type="text" id="employeeDisabledID" name="employeeDisabledID" value="{{ employee.employeeID }}" disabled><br><br>
+				
+				<label for="fname">First name:</label>
+				<input type="text" id="employeeFirstName" name="employeeFirstName" value="{{ employee.employeeFirstName }}" required><br><br>
+				
+				<label for="lname">Last name:</label>
+				<input type="text" id="employeeLastName" name="employeeLastName" value="{{ employee.employeeLastName }}" required><br><br>
+				
+				<label for="Password">Password:</label>
+				<input type="text" id="employeePassword" name="employeePassword" value="{{ employee.employeePassword }}" required><br><br>
+				
+				<label for="PasswordConfirm">Confirm Password:</label>
+				<input type="text" id="employeePasswordTest" name="employeePasswordTest" value="{{ employee.employeePassword }}" required><br><br>
+				
+				<label for="eType">Select employee type:</label>
+				<select name="employeeClassification" id="employeeClassification" required>
+					<option value=0>Cashier</option>
+					<option value=1>Shift Manager</option>
+					<option value=2>General Manager</option>
+				</select><br><br>
+				{% csrf_token %}
+				<hr>
+				<button type="submit" class="button extend">Save</button>
+			</div>
+		</form>
 	{% elif queryString == 'databaseEmpty' or request.session.employeeClassification > 0 %}
 		<!-- When there are no employees in the database or if a manager is
 		is visiting the page, render the employee creation form for them -->
 		<form action="/employeeCreate/" method="POST">
-		<label for="First Name">First Name:</label>
-		<input type="text" id="employeeFirstName" name="employeeFirstName" required><br><br>
-		
-		<label for="Last Name">Last Name:</label>
-		<input type="text" id="employeeLastName" name="employeeLastName" required><br><br>
-		
-		<label for="Password">Password:</label>
-		<input type="text" id="employeePassword" name="employeePassword" required><br><br>
-		
-		<label for="PasswordConfirm">Confirm Password:</label>
-		<input type="text" id="employeePasswordTest" name="employeePasswordTest" required><br><br>
-		
-		<label for="eType">Select employee type:</label>
-		<select name="employeeClassification" id="employeeClassification" required>
-			<option value=0>Cashier</option>
-			<option value=1>Shift Manager</option>
-			<option value=2>General Manager</option>
-		</select><br><br>
-		{% csrf_token %}
-		<button type="submit" class="button signIn">Save</button>
+			<div class="container">
+				<hr>
+				<label for="First Name">First Name:</label>
+				<input type="text" id="employeeFirstName" name="employeeFirstName" required><br><br>
+				
+				<label for="Last Name">Last Name:</label>
+				<input type="text" id="employeeLastName" name="employeeLastName" required><br><br>
+				
+				<label for="Password">Password:</label>
+				<input type="text" id="employeePassword" name="employeePassword" required><br><br>
+				
+				<label for="PasswordConfirm">Confirm Password:</label>
+				<input type="text" id="employeePasswordTest" name="employeePasswordTest" required><br><br>
+				
+				<label for="eType">Select employee type:</label>
+				<select name="employeeClassification" id="employeeClassification" required>
+					<option value=0>Cashier</option>
+					<option value=1>Shift Manager</option>
+					<option value=2>General Manager</option>
+				</select><br><br>
+				{% csrf_token %}
+				<hr>
+				<button type="submit" class="button extend">Save</button>
+			</div>
 	</form>
 	{% endif %}
+	<br>
+	
 </body>
 
 </html>
