@@ -11,35 +11,56 @@ from rest_framework import routers
 from register import views
 
 
-# Create a router so our API endpoint(s) can automatically route traffic
+# Create a router so our API endpoints can automatically route traffic
 router = routers.DefaultRouter()
 
-# Register our products API with the rest framework
+# Register our API end-points with DRF
 router.register(r'products', views.productViewSet)
-
-# Register our employee API with the rest framework
 router.register(r'employees', views.employeeViewSet)
-
-# Register our active users API with the rest framework
 router.register(r'activeusers', views.activeUserViewSet)
 
-# Tell Django how to route traffic to specific pages
+
 urlpatterns = [
-	path('', views.signIn, name='signIn'), # Show the signIn page by default
-	path('registerMenu/', views.registerMenu, name='registerMenu'),
+	
+	# This route point to our default page
+	path('', views.signIn, name='signIn'),
 
-	path('productListing/', views.productListing, name='productListing'),
+	# These routes point to pages tthat have a queryString passed to them
+	path('employeeDetails/queryString=<str:queryString>/', views.employeeDetails, name='employeeDetails'),
+	path('productListing/queryString=<str:queryString>/', views.productListing, name='productListing'),
+	path('productDetails/queryString=<str:queryString>/', views.productDetails, name='productDetails'),
+	path('productCreate/queryString=<str:queryString>/', views.productCreate, name='productCreate'),
+	path('registerMenu/queryString=<str:queryString>/', views.registerMenu, name='registerMenu'),
+	path('signIn/queryString=<str:queryString>/', views.signIn, name='signIn'),
+
+	# These routes point to pages that have some sort of ID passed to them
 	path('productDetails/<uuid:productUUID>/', views.productDetails, name='productDetails'),
-	path('productCreate/', views.productCreate, name='productCreate'),
+	path('employeeDetails/<int:employeeID>/', views.employeeDetails, name='employeeDetails'),
+	path('signIn/<int:employeeID>/', views.signIn, name='signIn'),
 
+	# These routes point to normal pages
+	path('registerMenu/', views.registerMenu, name='registerMenu'),
+	path('productListing/', views.productListing, name='productListing'),
+	path('productDetails/', views.productCreate, name='productDetails'),
+	path('productCreate/', views.productCreate, name='productCreate'),
 	path('employeeDetails/', views.employeeDetails, name='employeeDetails'),
 	path('signIn/', views.signIn, name='signIn'),
 	path('signOff/', views.signOff, name='signOff'),
 
-	path('api/', include(router.urls)), # This will automatically route traffic for any number of API endpoints
-	path('api/<uuid:id>/', include(router.urls)), # This is for API endpoint requests that pass along an id
-	path('admin/', admin.site.urls), # This will route the traffic to the Django admin panel
+	# This route exposes our APIs to the public
+	path('api/', include(router.urls)),
+	path('api/<uuid:id>/', include(router.urls)),
 
+	# This route points to the Django administration panel
+	path('admin/', admin.site.urls),
+
+	# These routes will point to the employee management APIView
+	path('employees/manage/', views.manageEmployees.as_view()),
+	path('employees/manage/<uuid:employeeUUID>/', views.manageEmployees.as_view()),
+
+	# These routes point to the product management APIView
+	path('products/manage/', views.manageProducts.as_view()),
+	path('products/manage/<uuid:productUUID>/', views.manageProducts.as_view()),
 ]
 
 # Display a custom template when a page is not found

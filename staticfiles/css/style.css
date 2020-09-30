@@ -1,194 +1,270 @@
+:root {
+    font-family: Arial, Helvetica, sans-serif;
+    /* Color variables */  /* Main colors from website https://colorhunt.co/palette/2763 */
+    --bg-color: #eeeeee; /* Grey - Page background */
+    --banner-color: #222831; /* Black - Banner color */
+    --primary-color: #393e46; /* Dark grey - Buttons and Hover over */
+    --primary-color-highlight: #4d5377;
+    --accent-color: #00adb5; /* Blue - Nav bar and Hover over */
+    --accent-color-highlight: #0082b5;
+    --primary-text-color: white; /* Text color when not on bg color */
+    --secondary-text-color: black; /* Text color when its on bg color */
+    --unselected-color: #cccccc; /* Border color of unselected input */
+    --selected-color: #555555; /* Border color of selected input */
+    --red-color:#be0000; /* Red color that isn't too harsh w/color scheme */
+}
 
-/* The following colors are our official color scheme:
-Green: #4CAF50
-Blue: #008CBA
-Red: #f44336
-Gray: #e7e7e7
-Black: #555555
-*/
+/* Custom scrollbar */ /* *NOTE* Not visible in Firefox or in Edge, prior version 79. */
+::-webkit-scrollbar {
+    width: 0.5rem;
+}
+::-webkit-scrollbar-track {
+    background-color: var(--primary-color);
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
+}
 
-/* Align h1, div and form tags to the center of the page */
-h1, div, form {
-	text-align: center;
-	color: #555555;
+/* Background color for page and clear padding/margin */
+body {
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+/* Heading for containers */
+.head {
+    font-size: 24px;
+    text-align: left;
+}
+
+/* Heading banner (ex. Main Menu) */
+.banner {
+    padding: 80px;
+    text-align: center;
+    background: var(--banner-color);
+    color: var(--primary-text-color);
+    font-size: 30px;
+    white-space: nowrap;
+    margin: 0;
+}
+.small {
+    padding: 20px;
 }
 
 /* Make links look more uniform */
-a, a:link, a:active, a:visited {
+a:link, a:visited {
 	display: block;
 	text-align: center;
 	text-decoration: none;
-	color: #008CBA;
+	color: var(--accent-color);
+}
+a:hover {
+    text-decoration: underline;
+}
+a:active {
+    color: var(--accent-color-highlight);
 }
 
-/* Make the label fields for forms look better */
+/* Navigation bar that follows you as you scroll down */
+.navbar {
+    overflow: hidden;
+    background-color: var(--accent-color);
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    font-size: 20px;
+}
+.navbar a { /* Items on left of navbar (ex. Home) */
+    float: left;
+    display: block;
+    color: var(--primary-text-color);
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+.navbar a:hover {
+    background-color:  var(--accent-color-highlight);
+    color: var(--primary-text-color);
+}
+.navbar a.signout { /* Items on right of navbar (ex. Signout) */
+    float: right;
+}
+.navbar a.signout:hover {
+    background-color: var(--red-color);
+}
+
+/* Container (Ex. SignIn, Create employee) */
+.container {
+    width: 35%;
+    margin: auto;
+    padding: 16px;
+    background-color: var(--primary-text-color);
+}
+/* Set a grey background color and center the text of the "sign in" section */
+.bottom {
+    background-color: #dbdbdb;
+    text-align: center;
+}
+
+/* Overwrite default styles of hr */
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+}
+
+/* Label fields for forms */
 label {
-	display: inline-block;
-	padding: 5px 0 0;
-	margin: 5px;
-	width: 250px;
-	text-align: right;
+    padding: 5px 0 0;
+    float: left;
+    margin: 5px;
+    font-weight: bold;
 }
 
-/* Make the input fields for forms look better */
+/* Make the input fields look better */
 input{
 	display: inline-block;
-	padding: 24px 32px;
-	margin: 10px 8px;
+    padding: 15px;
+    width: 100%;
+	margin: 5px 0 22px 0;
 	outline: none;
 	box-sizing: border-box;
 	font-size: 16px;
-	border: 1px solid #555555;
-	transition-duration: 0.4s;
+	border: 2px solid var(--unselected-color);
+    transition-duration: 0.4s;
+}
+input:focus { /* Border highlight of selected field */
+    border: 2px solid var(--selected-color);
 }
 
-/* Highlight the border of an input field when selected */
-input:focus {
-  background-color: lightblue;
+/* Select drop down */
+select {
+    background: var(--accent-color);
+    border: 2px solid var(--accent-color);
+    color: var(--primary-text-color);
+    padding: 8px 16px;
+    font-size: 20px;
+    display: inline-block;
 }
 
-/* Hide the status box which will display messages to the user */
-.statusBox {
-	display: none;
-	width: 400px;
-	height: 25px;
-	border: 10px solid #4CAF50; 
+/* Product Cards */
+.productCard { /* Organizes the products */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 1rem;    
+}
+.card { /* Product card */
+    display: flex;
+    flex-direction: column;
+    flex: center;
+    min-width: 400px;
+    margin: 1.5rem;
+    border-radius: 4px;
+    background: var(--primary-color);
+    color: var(--primary-text-color);
+    transition: 0.2s;
+}
+.card:hover {
+    transform: scale(1.1);
 }
 
-/* This is the flex container for our product listings. */
-.productContainer {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-}
+/* Alignment */
+.grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    margin: 1rem;
+ }
 
-/* This is the small rectangle that an individual item is displayed in */
-.productBox {
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-	flex: 0 1 calc(25% - 1em); /* Display 4 products per line and leave a space between them */
-	margin-bottom: 10px;
-	margin: 5px;
-	text-align: center;
-	font-family: arial;
-}
-
-/* This is the button at the bottom of a product listing */
-.productBox button {
-	border: none;
-	outline: 0;
-	padding: 12px;
-	color: white;
-	background-color: #008CBA;
-	text-align: center;
-	font-size: 18px;
-	width: 100%;
-}
-
-/* Make the button at the bottom of a product listing transparent when hovering over it */
-.productBox button:hover {
-	opacity: 0.5;
-}
-
-/* Style the list price of a product */
-.productPrice {
-	color: grey;
-	font-size: 22px;
-}
-
-/* Make buttons not within a product listing look better */
+/* Buttons */
 .button {
-	border: none;
-	color: white;
-	padding: 16px 32px;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	font-size: 16px;
-	margin: 4px 2px;
-	transition-duration: 0.4s;
-
+    margin: 0;
+    padding: 28px 32px;
+    background-color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 4px;
+    color: var(--primary-text-color);
+    display: grid;
+    text-align: center;
+    text-decoration: none;
+    font-size: 28px;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+.button:hover {
+    background-color: var(--primary-color-highlight);
+    color: var(--primary-text-color);
+    border: 2px solid var(--primary-color-highlight);
+}
+.center { /* Centered button */
+    display: inline-block;
+    margin-top: 1rem;
+}
+.extend { /* Edge to edge */
+    font-size: 16px;
+    display: inline-block;
+    padding: 20px 100px;
+    width: 100%;
+}
+.product { /* Product card inner button */
+    font-size: 16px;
+    font-weight: bold;
+    display: inline-block;
+    border: 2px solid var(--accent-color);
+    border-radius: 0;
+    background-color: var(--accent-color);
+    width: 100%;
+}
+.product:hover {
+    border: 2px solid var(--accent-color-highlight);
+    background-color: var(--accent-color-highlight);
+}
+.delete { /* Delete button (Ex. Product Details page) */
+    font-size: 16px;
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 20px 100px;
+    width: 100%;
+    background-color: var(--red-color);
+    border: 2px solid var(--red-color);
+    opacity: 50%;
+}
+.delete:hover {
+    background-color: var(--red-color);
+    border: 2px solid var(--red-color);
+    opacity: 100%;
 }
 
-/* The productDetails button that correctly aligns with the form */
-.productDetailsBlueButton {
-	margin-left: 300px;
-	background-color: white;
-	color: black;
-	border: 2px solid #008CBA;
+/* Font style for prices */
+.price {
+    color: var(--accent-color);
+    font-weight: bold;
+	font-size: 22px
 }
 
-/* This will change the buttons background to blue when hovered over*/
-.productDetailsBlueButton:hover {
-	background-color: #008CBA;
-	color: white;
+/* The following code is for the status box. Please DO NOT delete */
+.alert {
+  padding: 20px;
+  background-color: #f44336;
+  color: white;
 }
 
-/* This will make a button with a green border and black text */
-.productDetailsGreenButton {
-	margin-left: 10px;
-	background-color: white;
-	color: black;
-	border: 2px solid #4CAF50;
+.alert.success {background-color: #4CAF50;}
+.alert.info {background-color: #2196F3;}
+.alert.warning {background-color: #ff9800;}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-/* This will make a green button change its background color to green when you hover over it */
-.productDetailsGreenButton:hover {
-	background-color: #4CAF50;
-	color: white;
-}
-
-
-/* The productCreate button that correctly aligns with the form */
-.productCreateBlueButton {
-	margin-left: 290px;
-	background-color: white;
-	color: black;
-	border: 2px solid #008CBA;
-}
-
-/* This will change the buttons background to blue when hovered over*/
-.productCreateBlueButton:hover {
-	background-color: #008CBA;
-	color: white;
-}
-
-/* This will make a button with a green border and black text */
-.productCreateGreenButton {
-	margin-left: 10px;
-	background-color: white;
-	color: black;
-	border: 2px solid #4CAF50;
-}
-
-/* This will make a green button change its background color to green when you hover over it */
-.productCreateGreenButton:hover {
-	background-color: #4CAF50;
-	color: white;
-}
-
-/* A generic blue button that will work well outside of forms*/
-.productGenericBlueButton {
-	background-color: white;
-	color: black;
-	border: 2px solid #008CBA;
-}
-
-/* This will change the buttons background to blue when hovered over*/
-.productGenericBlueButton:hover {
-	background-color: #008CBA;
-	color: white;
-}
-
-/* A generic green button that will work well outside of forms*/
-.productGenericGreenButton {
-	margin-left: 10px;
-	background-color: white;
-	color: black;
-	border: 2px solid #4CAF50;
-}
-
-/* This will make a green button change its background color to green when you hover over it */
-.productGenericGreenButton:hover {
-	background-color: #4CAF50;
-	color: white;
-}
+.closebtn:hover {
+  color: black;

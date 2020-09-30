@@ -24,8 +24,10 @@ named "SECRET_KEY" on Heroku. When the web application is ran locally, it will
 default to using "!!SECRET_KEY_ENVIRONMENT_VARIBLE_NOT_SET!!" as a temporary
 secret key.
 """
-SECRET_KEY = getenv("SECRET_KEY", "!!SECRET_KEY_ENVIRONMENT_VARIBLE_NOT_SET!!")
+SECRET_KEY = getenv("SECRET_KEY", "Pals")
 
+# Make Django use cookie-based sessions
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
 # Set DEBUG to False before pushing to GitHub. Set it to true for local testing though
 DEBUG = True
@@ -81,7 +83,6 @@ TEMPLATES = [
 		},
 	},
 ]
-
 
 # Expose our web application to any WSGI-compliant web server
 WSGI_APPLICATION = 'programmingpals.wsgi.application'
@@ -145,5 +146,3 @@ STATICFILES_DIRS = (
 
 # Heroku settings
 django_heroku.settings(locals())
-
-#Test comment for commit

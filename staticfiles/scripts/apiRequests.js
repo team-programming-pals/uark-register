@@ -76,7 +76,7 @@ function handleSuccessResponse(httpRequest, callback) {
 		}
 
 		// Update the requesting functions callback so it can have the status code and response
-		callback(callbackResponse);
+		callback({ status: httpRequest.status, apiResponse: httpRequest.responseText });
 	}
 }
 
@@ -120,7 +120,7 @@ function handleFailureResponse(httpRequest, callback) {
 
 	if (callback != null) {
 		// Update the callback so we can pass along the status code and responseText
-		callback({ status: httpRequest.status, errorMessage: httpRequest.responseText.split('"').join('') });
+		callback({ status: httpRequest.status, apiResponse: httpRequest.responseText });
 	}
 }
 

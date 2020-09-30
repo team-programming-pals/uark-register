@@ -2,15 +2,121 @@
 <html>
 
 <head>
+
    <title>Uark Register - Employee Details</title>
    {% load static %}
-   <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
+	<script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}"></script>
+	<script type="text/javascript" src="{% static 'scripts/miscActions.js' %}"></script>
+	<script type="text/javascript" src="{% static 'scripts/employeeActions.js' %}"></script>
+	<script type="text/javascript" src="{% static 'scripts/productActions.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
+
+	{% if database != 'empty' and request.session.employeeClassification == 0 %}
+	<!-- Redirect a cashier as quickly as possible to avoid portions
+	of the employee details page being visible before they are
+	redirected back to the main menu -->
+	<script> window.location.href='/registerMenu/queryString=You must be a manager to access employee details'; </script>
+	{% endif %}
+
 </head>
 
 <body>
-	<h1>The employee details page will go here!</h1>
-	<div><p>You are seeing this page right now because there are no employees in the database.</p></div>
-  
+	<header class="banner small">
+		<h1>Uark Register</h1>
+		<h3>Employee Details</h3>
+	</header>
+	
+	<section class="navbar">
+		<a href="#" onclick="window.location.href='/registerMenu';">
+            <!--Home icon-->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18px" height="18px">
+                <path d="M0 0h24v24H0z" fill="none"/><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            Home
+        </a>
+        <a href="#" class="signout" onclick="window.location.href='/signOff';">
+            <!--Signout icon-->
+            <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" fill="white" width="18px" height="18px">
+                <g><rect fill="none" height="24" width="24"/></g>
+                <g><path d="M11,7L9.6,8.4l2.6,2.6H2v2h10.2l-2.6,2.6L11,17l5-5L11,7z M20,19h-8v2h8c1.1,0,2-0.9,2-2V5c0-1.1-0.9-2-2-2h-8v2h8V19z"/></g></svg>
+             Signout
+        </a>
+	</section>
+
+	<!-- Do not delete this span! This is how the
+		generated error messages are displayed! -->
+	<span id="alert" style="display: none"></span>
+
+	{% if queryString %}
+	<script>displayMessage("{{queryString}}", 'error');</script>
+	{% endif %}
+
+	{% if employeeID > 0 and request.session.employeeClassification > 0 %}
+		<!-- When the page has an EmployeeID passed in the URL and a manager
+		is visiting the page, render the employee update form for them -->
+		<form action="javascript:updateEmployee();">
+			<div class="container">
+				<hr>
+				<input type="hidden" id="employeeUUID" name="employeeUUID" value="{{ employee.employeeUUID }}" required><br>
+				<input type="hidden" id="employeeID", name="employeeID" value="{{ employee.employeeID }}">
+
+				<label for="employeeID">Employee ID:</label>
+				<input type="text" id="employeeDisabledID" name="employeeDisabledID" value="{{ employee.employeeID }}" disabled><br><br>
+				
+				<label for="fname">First name:</label>
+				<input type="text" id="employeeFirstName" name="employeeFirstName" value="{{ employee.employeeFirstName }}" required><br><br>
+				
+				<label for="lname">Last name:</label>
+				<input type="text" id="employeeLastName" name="employeeLastName" value="{{ employee.employeeLastName }}" required><br><br>
+				
+				<label for="Password">Password:</label>
+				<input type="text" id="employeePassword" name="employeePassword" value="{{ employee.employeePassword }}" required><br><br>
+				
+				<label for="PasswordConfirm">Confirm Password:</label>
+				<input type="text" id="employeePasswordConfirm" name="employeePasswordConfirm" value="{{ employee.employeePassword }}" required><br><br>
+				
+				<label for="eType">Select employee type:</label>
+				<select name="employeeClassification" id="employeeClassification" required>
+					<option value=0>Cashier</option>
+					<option value=1>Shift Manager</option>
+					<option value=2>General Manager</option>
+				</select><br><br>
+				{% csrf_token %}
+				<hr>
+				<button type="submit" class="button extend">Save</button>
+			</div>
+		</form>
+	{% elif database == 'empty' or request.session.employeeClassification > 0 %}
+		<!-- When there are no employees in the database or if a manager is
+		is visiting the page, render the employee creation form for them -->
+		<form action="javascript:createEmployee();">
+			<div class="container">
+				<hr>
+				<label for="First Name">First Name:</label>
+				<input type="text" id="employeeFirstName" name="employeeFirstName" required><br><br>
+				
+				<label for="Last Name">Last Name:</label>
+				<input type="text" id="employeeLastName" name="employeeLastName" required><br><br>
+				
+				<label for="Password">Password:</label>
+				<input type="text" id="employeePassword" name="employeePassword" required><br><br>
+				
+				<label for="PasswordConfirm">Confirm Password:</label>
+				<input type="text" id="employeePasswordConfirm" name="employeePasswordConfirm" required><br><br>
+				
+				<label for="eType">Select employee type:</label>
+				<select name="employeeClassification" id="employeeClassification" required>
+					<option value=0>Cashier</option>
+					<option value=1>Shift Manager</option>
+					<option value=2>General Manager</option>
+				</select><br><br>
+				{% csrf_token %}
+				<hr>
+				<button type="submit" class="button extend">Save</button>
+			</div>
+	</form>
+	{% endif %}
+	<br>
+	
 </body>
 
 </html>

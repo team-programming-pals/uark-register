@@ -9,190 +9,369 @@ Helpful Resources:
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import make_password, check_password
+from django.shortcuts import redirect
 from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from .serializers import productSerializer, employeeSerializer, ActiveUserSerializer
 from .models import Product, Employee, ActiveUser
-import hashlib
-import json
+from uuid import uuid4
+from random import randint
 
-# Process all client requests made to our product API
+
+
+"""
+These view sets are not required for the register to function,
+but making our models publicly accessible through DRF will make
+testing new features much easier. Additionally, I will share a
+link to these publicly exposed views so the graders can use them
+to verify that the register is working correctly
+"""
 class productViewSet(viewsets.ModelViewSet):
-	"""
-	An API endpoint which will allow us to view or edit
-	products in our database. The incoming HTTP verb
-	determines the behavior of this function:
-
-	1. GET: Will ask the view to return information from the database
-	2. POST: Will ask the view to create a new Product and add it to the database
-	3. PUT: Will ask the view to modify an existing product in the database
-	4. PATCH: Will ask the view to modify an individual field of a product that exists in the database
-	5. DELETE: Will ask the view to delete a specific product from the database 
-	"""
-
-	# Map primitive user input into a model instance or all writable relational fields
 	queryset = Product.objects.all()
-
-	# Convert database information into native python data types that can be easily converted to JSON
 	serializer_class = productSerializer
 
-
-# Process all client requests made to our employee API
 class employeeViewSet(viewsets.ModelViewSet):
-	"""
-	An API endpoint which will allow us to view or edit
-	employees in our database. The incoming HTTP verb
-	determines the behavior of this function:
-
-	1. GET: Will ask the view to return information from the database
-	2. POST: Will ask the view to create a new employee and add it to the database
-	3. PUT: Will ask the view to modify an existing employee in the database
-	4. PATCH: Will ask the view to modify an individual field of a employee that exists in the database
-	5. DELETE: Will ask the view to delete a specific employee from the database 
-	"""
-
-	# Map primitive user input into a model instance or all writable relational fields
 	queryset = Employee.objects.all()
 
-	# Convert database information into native python data types that can be easily converted to JSON
 	serializer_class = employeeSerializer
-
-
-# Process all client requests made to our active users API
 class activeUserViewSet(viewsets.ModelViewSet):
-	"""
-	An API endpoint which will allow us to view or edit
-	active users in our database. The incoming HTTP verb
-	determines the behavior of this function:
-
-	1. GET: Will ask the view to return information from the database
-	2. POST: Will ask the view to create a new active user and add it to the database
-	3. PUT: Will ask the view to modify an existing active user in the database
-	4. PATCH: Will ask the view to modify an individual field of an active user that exists in the database
-	5. DELETE: Will ask the view to delete a specific active user from the database 
-	"""
-
-	# Map primitive user input into a model instance or all writable relational fields
 	queryset = ActiveUser.objects.all()
-
-	# Convert database information into native python data types that can be easily converted to JSON
 	serializer_class = ActiveUserSerializer
 
 
-# Process all client requests made to the default register page
-def productListing(request, errorMessage='default'):
-	return render(request, 'productListing.html', {'products': Product.objects.all(), 'errorMessage': errorMessage})
+"""
+manageProducts is a class-based view which is used as a
+central maangement interface for all Product-related actions
+"""
+class manageProducts(APIView):
+	def post(self, request, format=None):
+		serializer = productSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response({'queryResponse': 'The product was successfully added'}, status=status.HTTP_201_CREATED)
+
+		"""
+		These if statements were the easiest way I could find
+		to send custom error responses from the API end-point
+		"""
+		if (str(serializer.data['productCode']).strip() == ''):
+			return Response({'queryResponse': 'The product name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['productCount']).strip() == ''):
+			return Response({'queryResponse': 'The product quantity field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (not str(serializer.data['productCount']).isdigit()):
+			return Response({'queryResponse': 'The product quantity field must be a valid integer'}, status=status.HTTP_400_BAD_REQUEST)
+
+		# There is some input validation problem I did not check for
+		return Response({'queryResponse': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+	def put(self, request, productUUID, format=None):
+		product = Product.objects.get(productUUID=productUUID)
+		serializer = productSerializer(product, data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response({'queryResponse': 'The product record was successfully updated'}, status=status.HTTP_201_CREATED)
+
+		"""
+		These if statements were the easiest way I could find
+		to send custom error responses from the API end-point
+		"""
+		if (str(serializer.data['productCode']).strip() == ''):
+			return Response({'queryResponse': 'The product name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['productCount']).strip() == ''):
+			return Response({'queryResponse': 'The product quantity field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (not str(serializer.data['productCount']).isdigit()):
+			return Response({'queryResponse': 'The product quantity field must be a valid integer'}, status=status.HTTP_400_BAD_REQUEST)
+
+		# There is some input validation problem I did not check for
+		return Response({'queryResponse': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+	def delete(self, request, productUUID, format=None):
+		product = Product.objects.get(productUUID=productUUID)
+		product.delete()
+		return Response({'queryResponse': 'The product record was successfully deleted'}, status=status.HTTP_204_NO_CONTENT)
 
 
-# Process all client requests made to /productDetails/<uuid:productUUID>/
-def productDetails(request, productUUID, errorMessage='default'):
-	return render(request, 'productDetails.html', {'product': get_object_or_404(Product, pk=productUUID), 'errorMessage': errorMessage})
+"""
+manageEmployees is a class-based view which is used as a
+central management interface for all Employee-related actions
+"""
+class manageEmployees(APIView):
+	def post(self, request, format=None):
+		serializer = employeeSerializer(data=request.data)
+		if serializer.is_valid():
+			employeeID = randint(10000, 99999)
+			if (not Employee.objects.count()):
+				serializer.save(employeeID=employeeID, employeeClassification = 2)
+				return Response({'queryResponse': 'initial', 'employeeID': int(serializer.data['employeeID'])}, status=status.HTTP_201_CREATED)
+			else:
+				serializer.save(employeeID=employeeID)
+				return Response({'queryResponse': 'The employee account was successfully created', 'employeeID': int(serializer.data['employeeID'])}, status=status.HTTP_201_CREATED)
+
+		"""
+		These if statements were the easiest way I could find
+		to send custom error responses from the API end-point
+		"""
+		if (str(serializer.data['employeeFirstName']).strip() == ''):
+			return Response({'queryResponse': 'The first name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeeLastName']).strip() == ''):
+			return Response({'queryResponse': 'The last name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeePassword']).strip() == ''):
+			return Response({'queryResponse': 'The password field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeeClassification']).strip() == ''):
+			return Response({'queryResponse': 'You must select an employee type'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeeFirstName']).strip() == ''):
+			return Response({'queryResponse': 'The first name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		# There is some input validation problem I did not check for
+		return Response({'queryResponse': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# Process all client requests made to /productCreate/
-def productCreate(request, errorMessage='default'):
-	return render(request, 'productCreate.html', {'errorMessage': errorMessage})
+	def put(self, request, employeeUUID, format=None):
+		employee = Employee.objects.get(employeeUUID=employeeUUID)
+		serializer = employeeSerializer(employee, data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response({'queryResponse': 'The employee record was successfully updated'}, status=status.HTTP_201_CREATED)
+
+		"""
+		These if statements were the easiest way I could find
+		to send custom error responses from the API end-point
+		"""
+		if (str(serializer.data['employeeFirstName']).strip() == ''):
+			return Response({'queryResponse': 'The first name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeeLastName']).strip() == ''):
+			return Response({'queryResponse': 'The last name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeePassword']).strip() == ''):
+			return Response({'queryResponse': 'The password field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeeClassification']).strip() == ''):
+			return Response({'queryResponse': 'You must select an employee type'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeeFirstName']).strip() == ''):
+			return Response({'queryResponse': 'The first name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		# There is some input validation problem I did not check for
+		return Response({'queryResponse': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# Process all client requests to /employeeDetails/
-def employeeDetails(request, errorMessage='default'):
-	return render(request, 'employeeDetails.html', {'errorMessage': errorMessage})
+
+# Process all client requests made to the product listing page
+def productListing(request, queryString=None):
+
+	# Require an active session to view the product listing page
+	if (not request.session.session_key):
+		return redirect('signIn', queryString='You must be signed into the register to view the product listing page')
+
+	# Render the product lising page
+	return render(request, 'productListing.html',
+				 {'products': Product.objects.all(), 
+				 'queryString': queryString})
+
+
+# Process all client requests made to the product details page
+def productDetails(request, productUUID, queryString=None):
+
+	# Require an active session to view the product details page
+	if (not request.session.session_key):
+		return redirect('signIn', queryString='You must be signed into the register to view the product details page')
+
+	# Render the product details page
+	return render(request, 'productDetails.html', 
+				 {'product': get_object_or_404(Product, productUUID=productUUID), 
+				 'queryString': queryString})
+
+
+# Process all client requests made to the product creation page
+def productCreate(request, queryString=None):
+
+	# Require an active session to view the product creation page
+	if (not request.session.session_key):
+		return redirect('signIn', queryString='You must be signed into the register to view the create product page')
+
+	# Render the product creation page
+	return render(request, 'productCreate.html', 
+				 {'queryString': queryString})
+
+
+# Process all client requests made to the register menu page
+def registerMenu(request, queryString=None):
+
+	# Require an active session to view the register menu page
+	if (not request.session.session_key):
+		return redirect('signIn', queryString='You must be signed into the register to view the register menu page')
+
+	# Render the register menu page
+	return render(request, 'registerMenu.html', 
+				 {'queryString': queryString})
+
+
+# Process all client requests for page not found errors
+def register_404(request, exception):
+	return render(request, 'register_404.html')
+
+
+# Process all client requests made to the employee details page
+def employeeDetails(request, queryString=None, employeeID=None):
+
+	# TODO: Make the employee stuff get called through the
+	# ajax scripts so the site URLs are consistent and do not
+	# break
+
+	# Always permit the request if there are no users in the database
+	if (not Employee.objects.count()):
+		return render(request, 'employeeDetails.html', 
+					 {'database': 'empty'})
+
+	# Require an active session to view the employee details page
+	if (not request.session.session_key):
+		return redirect('signIn', queryString='You must be signed into the register to view the employee details page')
+
+	# Process a request when an employeeID is passed in the URL
+	if (employeeID):
+		return render(request, 'employeeDetails.html', 
+					 {'employee': get_object_or_404(Employee, employeeID=employeeID), 
+					 'employeeID': employeeID})
+
+	# Render the employee details page
+	return render(request, 'employeeDetails.html',
+				 {'queryString': queryString})
 
 
 # Process all client requests made to the signIn page
-def signIn(request, errorMessage='default'):
-	# Listen for incoming POST requests
-	if request.method == 'POST':
+def signIn(request, employeeID=None, queryString=None):
 
-		# Grab the username and password from apiRequest.js
-		employeeData = json.loads(request.body)
+	# Listen for incoming POST requests
+	if (request.method == 'POST'):
+
+		# Grab the username and password from the signIn form
+		employeeID = request.POST.get('employeeID')
+		employeePassword = request.POST.get('employeePassword')
 
 		# EmployeeID must be an integer
-		if (employeeData['employeeID'].isdigit() == False):
-			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
-			return HttpResponse(json.dumps('Register Error: An employeeID must be a positive integer'), status=403)
+		if (not str(employeeID).isdigit()):
+			return render(request, 'signin.html', 
+						 {'employees': Employee.objects.all(), 
+						 'queryString': queryString,
+						 'queryType': 'errorEmployeeInt'})
 
 		# Do not accept a blank employeeID
-		if (employeeData['employeeID'] == ''):
-			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
-			return HttpResponse(json.dumps('Register Error: You must enter an employeeID.'), status=403)
+		if (str(employeeID).strip() == ''):
+			return render(request, 'signin.html', 
+						 {'employees': Employee.objects.all(), 
+						 'queryString': queryString,
+						 'queryType': 'errorEmployeeID'})
 
 		# Do not accept a blank password
-		if (employeeData['employeePassword'] == ''):
-			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
-			return HttpResponse(json.dumps('Register Error: You must enter a password.'), status=403)
+		if (str(employeePassword).strip() == ''):
+			return render(request, 'signin.html', 
+						 {'employees': Employee.objects.all(), 
+						 'queryString': queryString,
+						 'queryType': 'errorPassword'})
 
 		# Check if an employee account with the provided employeeID and password exists
-		employee = Employee.objects.filter(employeeID=employeeData['employeeID'], 
-											employeePassword=employeeData['employeePassword'])
+		employee = Employee.objects.filter(employeeID=employeeID)
 
 		if (employee.exists()):
-			# Create a new session for the active employee if one does not already exist
-			if (not request.session.session_key):
-				request.session.create()
-
-			# Set the employeeID as a session variable. This is required for the signOff function
-			request.session['employeeID'] = employeeData['employeeID']
 
 			# Get information about the user who just signed into the system
-			activeEmployee = Employee.objects.get(employeeID=employeeData['employeeID'])
+			activeEmployee = Employee.objects.get(employeeID=employeeID)
 
-			# Combine the FirstName and LastName into one variable to make the active name
-			activeName = ('{} {}').format(str(activeEmployee.employeeFirstName), str(activeEmployee.employeeLastName))
+			# The employee exists and the provided password matches what is in the database
+			if (employeePassword == activeEmployee.employeePassword):
+				# Combine the FirstName and LastName into one variable to make the active name
+				activeName = ('{} {}').format(str(activeEmployee.employeeFirstName), str(activeEmployee.employeeLastName))
 
-			# Check if the employee already has an ActiveUser database record
-			activeSessionCheck = ActiveUser.objects.filter(activeEmployeeUUID=activeEmployee.employeeUUID)
+				"""
+				Attempting to use a Django session key as the activeSessionKey proved to be
+				really unreliable. It caused all kinds of unexpected behavior because at
+				seemingly random times, Django would return null for the session key
+				and that would break everything because the database does not allow
+				the activeSessionKey to be null. So, I am getting around this problem
+				by generating a random activeSessionKey and passing it around as a 
+				Django session variable. This is far more reliable and it still allows
+				the register to use Django to track the employees session without
+				any issues.
+				"""
+				activeSessionKey = uuid4().hex
 
+				# Create a new session or update an existing session for the employee
+				request.session.save()
 
-			if (activeSessionCheck.exists()):
-				# Update the employees ActiveUser session key
-				ActiveUser.objects.filter(activeEmployeeUUID=activeEmployee.employeeUUID).update(activeSessionKey=request.session.session_key)
+				# Create session variables. These are used in the signOff function.
+				request.session['employeeID'] = employeeID
+				request.session['fullName'] = activeName
+				request.session['employeeClassification'] = activeEmployee.employeeClassification
+				request.session['activeKey'] = activeSessionKey
+
+				# Check if the employee already has an ActiveUser database record
+				activeSessionCheck = ActiveUser.objects.filter(activeEmployeeUUID=activeEmployee.employeeUUID)
+
+				if (activeSessionCheck.exists()):
+					# Update the employees ActiveUser session key
+					ActiveUser.objects.filter(activeEmployeeUUID=activeEmployee.employeeUUID).update(activeSessionKey=activeSessionKey)
+				else:
+					# Create a new ActiveUser database record for the employee
+					activeUser = ActiveUser.objects.create(activeEmployeeUUID=activeEmployee.employeeUUID,
+															activeName=activeName,
+															activeClassification=activeEmployee.employeeClassification,
+															activeSessionKey=activeSessionKey)
+
+				# Mark the employee as active
+				Employee.objects.filter(employeeID=activeEmployee.employeeID).update(employeeActive=True)
+
+				# The employee signed into the register. Redirect them to the main menu
+				return redirect('registerMenu')
 			else:
-				# Create a new ActiveUser database record for the employee
-				activeUser = ActiveUser.objects.create(activeEmployeeUUID=activeEmployee.employeeUUID,
-														activeName=activeName,
-														activeClassification=activeEmployee.employeeClassification,
-														activeSessionKey=request.session.session_key)
-
-			# Mark the employee as active
-			Employee.objects.filter(employeeID=activeEmployee.employeeID).update(employeeActive=True)
-
-			# The request was successful. Return status code 200 OK back to apiRequests.js
-			return HttpResponse({}, status=200)
+				# The request failed. Return to the signIn page with an appropriate error message
+				return redirect('signIn', queryString='Bad EmployeeID or password')
 		else:
-			# The request failed. Return status code 403 FORBIDDEN to apiRequests.js
-			return HttpResponse({json.dumps('Register Error: Incorrect username or password')}, status=403)
+			# The request failed. Return to the signIn page with an appropriate error message
+			return redirect('signIn', queryString='Bad EmployeeID or password')
 
-	# Transforms signin.html into an httpResponse object gunicorn can render as a web page
-	return render(request, 'signin.html', {'employees': Employee.objects.all(), 'errorMessage': errorMessage})
+	if (employeeID):
+		return render(request, 'signin.html', 
+					 {'employees': Employee.objects.all(), 
+					 'employeeID': employeeID})
+
+	# Render the sign-in page when no one is trying to sign into the register
+	return render(request, 'signin.html', 
+				 {'employees': Employee.objects.all(), 
+				 'queryString': queryString})
 
 
 # Process all client requests made to the signOff page
 def signOff(request):
+
+	# Disallowing access to the signOff view when there are no employees will prevent a KeyError from triggering
+	if (not Employee.objects.count()):
+		return HttpResponseRedirect('/signIn')
+
 	# Only try to clean up if there is an active session
 	if (request.session.session_key):
-		# Delete the employee from the ActiveUsers database
-		ActiveUser.objects.filter(activeSessionKey=request.session.session_key).delete()
 
-		# Mark the employee as inactive
-		checkStatus = Employee.objects.filter(employeeID=request.session['employeeID']).update(employeeActive=False)
+		if (request.session['activeKey']):
+			# Delete the employee from the ActiveUsers database
+			ActiveUser.objects.filter(activeSessionKey=request.session['activeKey']).delete()
+
+		if (request.session['employeeID']):
+			# Mark the employee as inactive
+			Employee.objects.filter(employeeID=request.session['employeeID']).update(employeeActive=False)
 
 		# Call Djangos built-in logout function to delete session information
 		logout(request)
 
 	# Redirect the user to the main page
 	return HttpResponseRedirect('/signIn')
-
-
-# Process all client requests for the main menu
-def registerMenu(request, errorMessage='default'):
-	if (not request.session.session_key):
-		# Redirect to the sign in page if the user is not signed into the register
-		return signIn(request, 'You must be signed into the register to access the main menu.')
-
-	# There is an active session, so render the main menu
-	return render(request, 'registerMenu.html')
-
-	
-# Process all client requests for page not found errors
-def register_404(request, exception):
-	return render(request, 'register_404.html')

@@ -44,7 +44,7 @@ class Employee(models.Model):
 	
 	def __str__(self):
 		# This is the default response from a Employee object
-		return (str(self.employeeUUID))
+		return (str(self.employeeID))
 
 
 # Create a model for the activeuser table in our database
@@ -58,6 +58,6 @@ class ActiveUser(models.Model):
 
 	def __str__(self):
 		# This is the default response from an ActiveUser object
-		return (str(self.activeUUID))
+		return (str(self.activeName))
 
 
