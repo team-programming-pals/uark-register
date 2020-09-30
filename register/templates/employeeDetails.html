@@ -3,21 +3,27 @@
 
 <head>
 
-	{% if queryString != 'databaseEmpty' and request.session.employeeClassification == 0 %}
+   <title>Uark Register - Employee Details</title>
+   {% load static %}
+	<script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}"></script>
+	<script type="text/javascript" src="{% static 'scripts/miscActions.js' %}"></script>
+	<script type="text/javascript" src="{% static 'scripts/employeeActions.js' %}"></script>
+	<script type="text/javascript" src="{% static 'scripts/productActions.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
+
+	{% if database != 'empty' and request.session.employeeClassification == 0 %}
 	<!-- Redirect a cashier as quickly as possible to avoid portions
 	of the employee details page being visible before they are
 	redirected back to the main menu -->
-	<script> window.location.href='/registerMenu'; </script>
+	<script> window.location.href='/registerMenu/queryString=You must be a manager to access employee details'; </script>
 	{% endif %}
 
-   <title>Uark Register - Employee Details</title>
-   {% load static %}
-   <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
 </head>
 
 <body>
 	<header class="banner small">
-		<h1>Employee Details</h1>
+		<h1>Uark Register</h1>
+		<h3>Employee Details</h3>
 	</header>
 	
 	<section class="navbar">
@@ -35,78 +41,19 @@
              Signout
         </a>
 	</section>
-	
-	<div id='statusBox'>
-		<p id="status"></p>
-	</div>
 
-	{% if queryString != 'default' and queryType == 'error' %}
-		<script>
-			document.getElementById('statusBox').style.background = '#FFCCCC';
-			document.getElementById('statusBox').style.display = "block";
-			document.getElementById('status').innerHTML = "{{ queryString }}";
-			setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
-		</script>
-	{% endif %}
+	<!-- Do not delete this span! This is how the
+		generated error messages are displayed! -->
+	<span id="alert" style="display: none"></span>
 
-	{% if queryString != 'default' and queryType == 'errorFirst' %}
-		<script>
-			document.getElementById('statusBox').style.background = '#FFCCCC';
-			document.getElementById('statusBox').style.display = "block";
-			document.getElementById('status').innerHTML = "Register Error: The first name may not be blank";
-			setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
-		</script>
-	{% endif %}
-
-	{% if queryString != 'default' and queryType == 'errorLast' %}
-		<script>
-			document.getElementById('statusBox').style.background = '#FFCCCC';
-			document.getElementById('statusBox').style.display = "block";
-			document.getElementById('status').innerHTML = "Register Error: The last name may not be blank";
-			setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
-		</script>
-	{% endif %}
-
-	{% if queryString != 'default' and queryType == 'errorPass' %}
-		<script>
-			document.getElementById('statusBox').style.background = '#FFCCCC';
-			document.getElementById('statusBox').style.display = "block";
-			document.getElementById('status').innerHTML = "Register Error: The password may not be blank";
-			setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
-		</script>
-	{% endif %}
-
-	{% if queryString != 'default' and queryType == 'employeeNoExist' %}
-		<script>
-			document.getElementById('statusBox').style.background = '#FFCCCC';
-			document.getElementById('statusBox').style.display = "block";
-			document.getElementById('status').innerHTML = "The employeeID does not exist in the database";
-			setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
-		</script>
-	{% endif %}
-
-	{% if queryString != 'default' and queryType == 'successUpdate' %}
-		<script>
-			document.getElementById('statusBox').style.background = '#4CAF50';
-			document.getElementById('statusBox').style.display = "block";
-			document.getElementById('status').innerHTML = "The employee profile was successfully updated";
-			setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
-		</script>
-	{% endif %}
-
-	{% if queryString != 'default' and queryType == 'successCreate' %}
-		<script>
-			document.getElementById('statusBox').style.background = '#4CAF50';
-			document.getElementById('statusBox').style.display = "block";
-			document.getElementById('status').innerHTML = "The employee account was successfully created";
-			setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
-		</script>
+	{% if queryString %}
+	<script>displayMessage("{{queryString}}", 'error');</script>
 	{% endif %}
 
 	{% if employeeID > 0 and request.session.employeeClassification > 0 %}
 		<!-- When the page has an EmployeeID passed in the URL and a manager
 		is visiting the page, render the employee update form for them -->
-		<form action="/employeeUpdate/" method="POST">
+		<form action="javascript:updateEmployee();">
 			<div class="container">
 				<hr>
 				<input type="hidden" id="employeeUUID" name="employeeUUID" value="{{ employee.employeeUUID }}" required><br>
@@ -125,7 +72,7 @@
 				<input type="text" id="employeePassword" name="employeePassword" value="{{ employee.employeePassword }}" required><br><br>
 				
 				<label for="PasswordConfirm">Confirm Password:</label>
-				<input type="text" id="employeePasswordTest" name="employeePasswordTest" value="{{ employee.employeePassword }}" required><br><br>
+				<input type="text" id="employeePasswordConfirm" name="employeePasswordConfirm" value="{{ employee.employeePassword }}" required><br><br>
 				
 				<label for="eType">Select employee type:</label>
 				<select name="employeeClassification" id="employeeClassification" required>
@@ -138,10 +85,10 @@
 				<button type="submit" class="button extend">Save</button>
 			</div>
 		</form>
-	{% elif queryString == 'databaseEmpty' or request.session.employeeClassification > 0 %}
+	{% elif database == 'empty' or request.session.employeeClassification > 0 %}
 		<!-- When there are no employees in the database or if a manager is
 		is visiting the page, render the employee creation form for them -->
-		<form action="/employeeCreate/" method="POST">
+		<form action="javascript:createEmployee();">
 			<div class="container">
 				<hr>
 				<label for="First Name">First Name:</label>
@@ -154,7 +101,7 @@
 				<input type="text" id="employeePassword" name="employeePassword" required><br><br>
 				
 				<label for="PasswordConfirm">Confirm Password:</label>
-				<input type="text" id="employeePasswordTest" name="employeePasswordTest" required><br><br>
+				<input type="text" id="employeePasswordConfirm" name="employeePasswordConfirm" required><br><br>
 				
 				<label for="eType">Select employee type:</label>
 				<select name="employeeClassification" id="employeeClassification" required>

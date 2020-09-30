@@ -3,205 +3,146 @@
 // Purpose: Functions performing actions with product forms
 // Date:    September 2020
 // ========================================================================
-
-// Grab the product id from the form sending the request
 function getProductUUID() {
 	return document.getElementById("productUUID").value;
 }
 
-
-// Grab the product code from the form sending the request
 function getProductCode() {
 	return document.getElementById("productCode").value;
 }
 
-
-// Grab the product count from the form sending the request
 function getProductCount() {
 	return document.getElementById("productCount").value;
 }
 
-function validateProduct(getter){
-	//takes in getter and checks for null values, returns the getter
-	if (getter == 0)
-	{
-		return getter;
-	}
-	else if((getter.length == 0)||(getter.length > 31)){
-        alert("Invalid entry; make sure all fields are filled \nand product name is less than 32 characters.");
-		return false;
-	}
-	else if(getter < 0){
-		alert("Invalid entry; Product quantity cannot be negative");
-		return false;
-	}
-    else {
-        return getter;
-    }
-}
-
-function Create(){
-	//validation function for creating products
-	if((validateProduct(getProductCode()))&&(validateProduct(getProductCount())))
-	{
-		createProduct();
-		return;
-	}
-	else{
-		
-		return;
-	}		
-}
-
-function Submit(){
-	//validation function for updating product
-	if((validateProduct(getProductCode()))&&(validateProduct(getProductCount()))&&(validateProduct(getProductUUID())))
-	{
-		updateProduct();
-		return;
-	}
-	else{
-		
-		return;
-	}		
-}
-
-// Add a new product to the database
 function createProduct() {
 	/* Set up the request by specifying the correct API endpoint,
 	grabbing the unique csrf token and collecting the data we
 	would like to send to the API */
-	const productActionURL = ('/api/products/');
+	const actionURL = ('/products/manage/');
 	const securityToken = getCSRFToken('csrftoken');
-	const productData = {productCount: getProductCount(), productCode: getProductCode()};
+	const productData = {productCode: getProductCode(), productCount: getProductCount()};
 
-	// As per the comment in apiRequest.js, we need to use the POST verb to create a new database record
-	ajaxPost(productActionURL, productData, securityToken, (callbackResponse) => {
+	// As per the comment in apiRequest.js, we need to use the POST verb to create a new record
+	ajaxPost(actionURL, productData, securityToken, (callbackResponse) => {
 
 	// Use the status code stored in our callbackResponse to see if the request was successful
 	if (isSuccessResponse(callbackResponse)) {
-		displayMessage('The product was successfully added.', 'success');
-		document.getElementById('lookupcode').value = '';
-		document.getElementById('count').value = ''
+		// Grab the respose from the API end-point and parse it
+		var apiResponse = JSON.parse(callbackResponse.apiResponse);
+
+		// Display success messages
+		if (apiResponse['queryResponse']){
+			displayMessage(apiResponse['queryResponse'], 'success');
+		}
+
 	}
 
 	// Use the status code stored in our callbackResponse to see if the request failed
 	if (isErrorResponse(callbackResponse)){
-		displayMessage('The request to add a product was denied.', 'failed');
-		document.getElementById('lookupcode').value = '';
-		document.getElementById('count').value = ''
+		// Grab the respose from the API end-point and parse it
+		var apiResponse = JSON.parse(callbackResponse.apiResponse);
+
+		// Display error messages
+		if (apiResponse['queryResponse']){
+			displayMessage(apiResponse['queryResponse'], 'error');
+		}
 	}
 });
-
 }
 
-
-// Remove a product from the database
-function deleteProduct() {
-	//Set up the request by specifying the correct API endpoint,
-	const productActionURL = ('/api/products/' + (getProductUUID()) + '/');
-
-	// As per the comment in apiRequest.js, we need to use the DELETE verb to remove an item from the database
-	ajaxDelete(productActionURL, (callbackResponse) => {
-
-	// Use the status code stored in our callbackResponse to see if the request was successful
-	if (isSuccessResponse(callbackResponse)) {
-		displayMessage('The product was successfully deleted.', 'success');
-		document.getElementById('lookupcode').value = '';
-		document.getElementById('count').value = ''
-	}
-
-	// Use the status code stored in our callbackResponse to see if the request failed
-	if (isErrorResponse(callbackResponse)){
-		displayMessage('The request to delete a product was denied.', 'fail');
-		document.getElementById('lookupcode').value = '';
-		document.getElementById('count').value = ''
-	}
-});
-
-}
-
-
-// Update an existing product in the database
 function updateProduct() {
 	/* Set up the request by specifying the correct API endpoint,
 	grabbing the unique csrf token and collecting the data we
 	would like to send to the API */
-	const productActionURL = ('/api/products/' + (getProductUUID()) + '/');
+	const actionURL = ('/products/manage/' + getProductUUID() + '/');
 	const securityToken = getCSRFToken('csrftoken');
-	const productData = {productUUID: getProductUUID(), productCount: getProductCount(), productCode: getProductCode()};
+	const productData = {productUUID: getProductUUID(), productCode: getProductCode(), productCount: getProductCount()};
 
-	// As per the comment in apiRequest.js, we need to use the PUT verb to update an existing item in the database
-	ajaxPut(productActionURL, productData, securityToken, (callbackResponse) => {
+	// As per the comment in apiRequest.js, we need to use the PUT verb to update an existing record
+	ajaxPut(actionURL, productData, securityToken, (callbackResponse) => {
 
 	// Use the status code stored in our callbackResponse to see if the request was successful
 	if (isSuccessResponse(callbackResponse)) {
-		displayMessage('The product was successfully updated.', 'success');
-		document.getElementById('lookupcode').value = '';
-		document.getElementById('count').value = ''
+		// Grab the respose from the API end-point and parse it
+		var apiResponse = JSON.parse(callbackResponse.apiResponse);
+
+		// Display success messages
+		if (apiResponse['queryResponse']){
+			displayMessage(apiResponse['queryResponse'], 'success');
+		}
+
 	}
 
 	// Use the status code stored in our callbackResponse to see if the request failed
 	if (isErrorResponse(callbackResponse)){
-		displayMessage('The request to update a product was denied.', 'fail');
-		document.getElementById('lookupcode').value = '';
-		document.getElementById('count').value = ''
-	}
-});
+		// Grab the respose from the API end-point and parse it
+		var apiResponse = JSON.parse(callbackResponse.apiResponse);
 
-}
-
-
-// Display a message on the page that made the request
-function displayMessage(text, type) {
-	// A successful message will give the statusBox a green background and show the hidden element
-	if (type == 'success') {
-		document.getElementById('statusBox').style.background = '#4CAF50';
-		document.getElementById('statusBox').style.display = 'block';
-		document.getElementById('status').innerHTML = text;
-		setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
-
-	}
-
-
-	// A failed message will give the statusBox a red background and show the hidden element
-	if (type == 'failed') {
-		document.getElementById('statusBox').style.background = '#f44336';
-		document.getElementById('statusBox').style.display = 'block';
-		document.getElementById('status').innerHTML = text;
-		setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
-	}
-}
-
-
-// Grab a CSRF token from a cookie
-function getCSRFToken(name) {
-	/* Django has cross site request forgery protection, so we have to
-	send a unique token along with certain requests or the web server
-	will flat-out reject the request.
-
-	When a form is submitted our template will store this special token
-	in a cookie named "csrftoken". The getCSRFToken function will get
-	the token from the cookie so it can be sent along with any request
-	that needs a CSRF token to work.*/
-
-	let tokenValue = null;
-
-	// If the cookie exists, grab the data inside of it
-	if (document.cookie && document.cookie !== '') {
-		const tokens = document.cookie.split(';');
-		// Cycle through the token's characters
-		for (let i = 0; i < tokens.length; i++) {
-			// Remove whitespace
-			const token = tokens[i].trim();
-			// Verify that this is a valid CSRF token generated by Django
-			if (token.substring(0, name.length + 1) === (name + '=')) {
-				// Decode the token and store it in tokenValue
-				tokenValue = decodeURIComponent(token.substring(name.length + 1));
-				break;
-			}
+		// Display error messages
+		if (apiResponse['queryResponse']){
+			displayMessage(apiResponse['queryResponse'], 'error');
 		}
 	}
+});
+}
 
-	return tokenValue;
+function deleteProduct() {
+	/* Set up the request by specifying the correct API endpoint,
+	grabbing the unique csrf token and collecting the data we
+	would like to send to the API */
+	const actionURL = ('/products/manage/' + getProductUUID() + '/');
+	const securityToken = getCSRFToken('csrftoken');
+
+	// As per the comment in apiRequest.js, we need to use the DELETE verb to delete an existing record
+	ajaxDelete(actionURL, securityToken, (callbackResponse) => {
+
+	// Use the status code stored in our callbackResponse to see if the request was successful
+	if (isSuccessResponse(callbackResponse)) {
+		// Grab the respose from the API end-point and parse it
+		var apiResponse = JSON.parse(callbackResponse.apiResponse);
+
+		// Display success messages
+		if (apiResponse['queryResponse']){
+			displayMessage(apiResponse['queryResponse'], 'success');
+		}
+
+	}
+
+	// Use the status code stored in our callbackResponse to see if the request failed
+	if (isErrorResponse(callbackResponse)){
+		// Grab the respose from the API end-point and parse it
+		var apiResponse = JSON.parse(callbackResponse.apiResponse);
+
+		// Display error messages
+		if (apiResponse['queryResponse']){
+			displayMessage(apiResponse['queryResponse'], 'error');
+		}
+	}
+});
+}
+
+/*
+I squished these functions together to make one smaller function. This way
+there is less confusion about what is going on. I also removed the check
+if someone enters zero, because I feel like there is a legitimate case for
+wanting to list an out of stock product
+*/
+function validateProduct() {
+	if (getProductCode().length >= 32){
+		displayMessage('The product name must be less than 32 characters', 'error');
+		return false;
+	}
+
+	if (getProductCode().trim() === "") {
+		displayMessage('The product name must may not be blank', 'error');
+		return false;
+	}
+
+	if (Number(getProductCount()) < 0 || isNaN(getProductCount()) ){
+		displayMessage('The product count must be a positive integer', 'error');
+		return false;
+	}
+
+	return true;
 }

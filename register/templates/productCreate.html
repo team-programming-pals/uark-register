@@ -4,15 +4,17 @@
 <head>
    <title>Uark Register - Add a product</title>
    {% load static %}
-   <script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}" defer></script>
-   <script type="text/javascript" src="{% static 'scripts/productActions.js' %}" defer></script>
-   <script type="text/javascript" src="{% static 'scripts/siteActions.js' %}" defer></script>
-   <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
+	<script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}"></script>
+	<script type="text/javascript" src="{% static 'scripts/miscActions.js' %}"></script>
+	<script type="text/javascript" src="{% static 'scripts/employeeActions.js' %}"></script>
+	<script type="text/javascript" src="{% static 'scripts/productActions.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
 </head>
 
 <body>
 	<header class="banner small">
-		<h1>Create Product</h1>
+		<h1>Uark Register</h1>
+		<h3>Create Product</h3>
 	</header>
 
 	<section class="navbar">
@@ -34,21 +36,15 @@
         </a>
 	</section>
 	
-	<div id='statusBox'>
-		<p id="status"></p>
-	</div>
-	
+	<!-- Do not delete this span! This is how the
+		generated error messages are displayed! -->
+	<span id="alert" style="display: none"></span>
 
-	{% if queryString != 'default' and queryType == 'error' %}
-		<script>
-			document.getElementById('statusBox').style.background = '#FFCCCC';
-			document.getElementById('statusBox').style.display = "block";
-			document.getElementById('status').innerHTML = "{{ queryString }}";
-			setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
-		</script>
+	{% if queryString %}
+	<script>displayMessage("{{queryString}}", 'error');</script>
 	{% endif %}
 	
-	<form action="javascript:Create();">
+	<form action="javascript:createProduct();" onsubmit="return validateProduct()">
 		<div class="container">
 			<hr>
 			<label for="productCode">Product Name:</label>

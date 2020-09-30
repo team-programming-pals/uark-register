@@ -15,6 +15,33 @@ function getProductCount() {
 	return document.getElementById("productCount").value;
 }
 
+function testProduct(text) {
+	if (text.length >= 32){
+		displayMessage('The product name must be less than 32 characters', 'error');
+		return false;
+	}
+}
+
+function validateProduct(getter){
+	//takes in getter and checks for null values, returns the getter
+	if (getter == 0)
+	{
+		return true;
+	}
+	else if((getter.length == 0)||(getter.length > 31)){
+        
+        displayMessage('The product name must be less than 32 characters', 'error');
+		return false;
+	}
+	else if(getter < 0){
+		displayMessage('The product quantity must be a valid integer', 'error');
+		return false;
+	}
+    else {
+        return true;
+    }
+}
+
 function createProduct() {
 	/* Set up the request by specifying the correct API endpoint,
 	grabbing the unique csrf token and collecting the data we
@@ -120,29 +147,4 @@ function deleteProduct() {
 		}
 	}
 });
-}
-
-/*
-I squished these functions together to make one smaller function. This way
-there is less confusion about what is going on. I also removed the check
-if someone enters zero, because I feel like there is a legitimate case for
-wanting to list an out of stock product
-*/
-function validateProduct() {
-	if (getProductCode().length >= 32){
-		displayMessage('The product name must be less than 32 characters', 'error');
-		return false;
-	}
-
-	if (getProductCode().trim() === "") {
-		displayMessage('The product name must may not be blank', 'error');
-		return false;
-	}
-
-	if (Number(getProductCount()) < 0 || isNaN(getProductCount()) ){
-		displayMessage('The product count must be a positive integer', 'error');
-		return false;
-	}
-
-	return true;
 }

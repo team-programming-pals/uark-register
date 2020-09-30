@@ -3,11 +3,16 @@
 <head>
     <title>Uark Register - Menu</title>
     {% load static %}
+    <script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}"></script>
+    <script type="text/javascript" src="{% static 'scripts/miscActions.js' %}"></script>
+    <script type="text/javascript" src="{% static 'scripts/employeeActions.js' %}"></script>
+    <script type="text/javascript" src="{% static 'scripts/productActions.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
 </head>
 <body>
     <header class="banner">
-        <h1>UArk Register</h1>
+        <h1>Uark Register</h1>
+        <h3>Main Menu</h3>
     </header>
 
     <section class="navbar">
@@ -27,19 +32,14 @@
     </section>
 
 
-    <div id='statusBox'>
-        <p id="status"></p>
-    </div>
+    <!-- Do not delete this span! This is how the
+        generated error messages are displayed! -->
+    <span id="alert" style="display: none"></span>
 
-
-    {% if queryString != 'default' and queryType == 'error' %}
-        <script>
-            document.getElementById('statusBox').style.background = '#FFCCCC';
-            document.getElementById('statusBox').style.display = "block";
-            document.getElementById('status').innerHTML = "{{ queryString }}";
-            setTimeout(function(){ document.getElementById('statusBox').style.display = 'none'; }, 5000);
-        </script>
+    {% if queryString %}
+    <script>displayMessage("{{queryString}}", 'error');</script>
     {% endif %}
+
 
     <!--FIX!!! Don't know where to redirect some pages to-->
     <!--FIX!!! Manager viewing only-->

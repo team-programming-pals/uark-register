@@ -10,127 +10,212 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password, check_password
+from django.shortcuts import redirect
 from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from .serializers import productSerializer, employeeSerializer, ActiveUserSerializer
 from .models import Product, Employee, ActiveUser
 from uuid import uuid4
 from random import randint
 
-# Process all client requests made to our product API
+
+
+"""
+These view sets are not required for the register to function,
+but making our models publicly accessible through DRF will make
+testing new features much easier. Additionally, I will share a
+link to these publicly exposed views so the graders can use them
+to verify that the register is working correctly
+"""
 class productViewSet(viewsets.ModelViewSet):
-	"""
-	An API endpoint which will allow us to view or edit
-	products in our database. The incoming HTTP verb
-	determines the behavior of this function:
-
-	1. GET: Will ask the view to return information from the database
-	2. POST: Will ask the view to create a new Product and add it to the database
-	3. PUT: Will ask the view to modify an existing product in the database
-	4. PATCH: Will ask the view to modify an individual field of a product that exists in the database
-	5. DELETE: Will ask the view to delete a specific product from the database 
-	"""
-
-	# Map primitive user input into a model instance or all writable relational fields
 	queryset = Product.objects.all()
-
-	# Convert database information into native python data types that can be easily converted to JSON
 	serializer_class = productSerializer
 
-
-# Process all client requests made to our employee API
 class employeeViewSet(viewsets.ModelViewSet):
-	"""
-	An API endpoint which will allow us to view or edit
-	employees in our database. The incoming HTTP verb
-	determines the behavior of this function:
-
-	1. GET: Will ask the view to return information from the database
-	2. POST: Will ask the view to create a new employee and add it to the database
-	3. PUT: Will ask the view to modify an existing employee in the database
-	4. PATCH: Will ask the view to modify an individual field of a employee that exists in the database
-	5. DELETE: Will ask the view to delete a specific employee from the database 
-	"""
-
-	# Map primitive user input into a model instance or all writable relational fields
 	queryset = Employee.objects.all()
 
-	# Convert database information into native python data types that can be easily converted to JSON
 	serializer_class = employeeSerializer
-
-
-# Process all client requests made to our active users API
 class activeUserViewSet(viewsets.ModelViewSet):
-	"""
-	An API endpoint which will allow us to view or edit
-	active users in our database. The incoming HTTP verb
-	determines the behavior of this function:
-
-	1. GET: Will ask the view to return information from the database
-	2. POST: Will ask the view to create a new active user and add it to the database
-	3. PUT: Will ask the view to modify an existing active user in the database
-	4. PATCH: Will ask the view to modify an individual field of an active user that exists in the database
-	5. DELETE: Will ask the view to delete a specific active user from the database 
-	"""
-
-	# Map primitive user input into a model instance or all writable relational fields
 	queryset = ActiveUser.objects.all()
-
-	# Convert database information into native python data types that can be easily converted to JSON
 	serializer_class = ActiveUserSerializer
 
 
+"""
+manageProducts is a class-based view which is used as a
+central maangement interface for all Product-related actions
+"""
+class manageProducts(APIView):
+	def post(self, request, format=None):
+		serializer = productSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response({'queryResponse': 'The product was successfully added'}, status=status.HTTP_201_CREATED)
+
+		"""
+		These if statements were the easiest way I could find
+		to send custom error responses from the API end-point
+		"""
+		if (str(serializer.data['productCode']).strip() == ''):
+			return Response({'queryResponse': 'The product name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['productCount']).strip() == ''):
+			return Response({'queryResponse': 'The product quantity field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (not str(serializer.data['productCount']).isdigit()):
+			return Response({'queryResponse': 'The product quantity field must be a valid integer'}, status=status.HTTP_400_BAD_REQUEST)
+
+		# There is some input validation problem I did not check for
+		return Response({'queryResponse': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+	def put(self, request, productUUID, format=None):
+		product = Product.objects.get(productUUID=productUUID)
+		serializer = productSerializer(product, data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response({'queryResponse': 'The product record was successfully updated'}, status=status.HTTP_201_CREATED)
+
+		"""
+		These if statements were the easiest way I could find
+		to send custom error responses from the API end-point
+		"""
+		if (str(serializer.data['productCode']).strip() == ''):
+			return Response({'queryResponse': 'The product name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['productCount']).strip() == ''):
+			return Response({'queryResponse': 'The product quantity field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (not str(serializer.data['productCount']).isdigit()):
+			return Response({'queryResponse': 'The product quantity field must be a valid integer'}, status=status.HTTP_400_BAD_REQUEST)
+
+		# There is some input validation problem I did not check for
+		return Response({'queryResponse': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+	def delete(self, request, productUUID, format=None):
+		product = Product.objects.get(productUUID=productUUID)
+		product.delete()
+		return Response({'queryResponse': 'The product record was successfully deleted'}, status=status.HTTP_204_NO_CONTENT)
+
+
+"""
+manageEmployees is a class-based view which is used as a
+central management interface for all Employee-related actions
+"""
+class manageEmployees(APIView):
+	def post(self, request, format=None):
+		serializer = employeeSerializer(data=request.data)
+		if serializer.is_valid():
+			employeeID = randint(10000, 99999)
+			if (not Employee.objects.count()):
+				serializer.save(employeeID=employeeID, employeeClassification = 2)
+				return Response({'queryResponse': 'initial', 'employeeID': int(serializer.data['employeeID'])}, status=status.HTTP_201_CREATED)
+			else:
+				serializer.save(employeeID=employeeID)
+				return Response({'queryResponse': 'The employee account was successfully created', 'employeeID': int(serializer.data['employeeID'])}, status=status.HTTP_201_CREATED)
+
+		"""
+		These if statements were the easiest way I could find
+		to send custom error responses from the API end-point
+		"""
+		if (str(serializer.data['employeeFirstName']).strip() == ''):
+			return Response({'queryResponse': 'The first name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeeLastName']).strip() == ''):
+			return Response({'queryResponse': 'The last name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeePassword']).strip() == ''):
+			return Response({'queryResponse': 'The password field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeeClassification']).strip() == ''):
+			return Response({'queryResponse': 'You must select an employee type'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeeFirstName']).strip() == ''):
+			return Response({'queryResponse': 'The first name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		# There is some input validation problem I did not check for
+		return Response({'queryResponse': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+	def put(self, request, employeeUUID, format=None):
+		employee = Employee.objects.get(employeeUUID=employeeUUID)
+		serializer = employeeSerializer(employee, data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response({'queryResponse': 'The employee record was successfully updated'}, status=status.HTTP_201_CREATED)
+
+		"""
+		These if statements were the easiest way I could find
+		to send custom error responses from the API end-point
+		"""
+		if (str(serializer.data['employeeFirstName']).strip() == ''):
+			return Response({'queryResponse': 'The first name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeeLastName']).strip() == ''):
+			return Response({'queryResponse': 'The last name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeePassword']).strip() == ''):
+			return Response({'queryResponse': 'The password field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeeClassification']).strip() == ''):
+			return Response({'queryResponse': 'You must select an employee type'}, status=status.HTTP_400_BAD_REQUEST)
+
+		if (str(serializer.data['employeeFirstName']).strip() == ''):
+			return Response({'queryResponse': 'The first name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
+
+		# There is some input validation problem I did not check for
+		return Response({'queryResponse': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 # Process all client requests made to the product listing page
-def productListing(request, queryString='default', queryType='default'):
+def productListing(request, queryString=None):
 
 	# Require an active session to view the product listing page
 	if (not request.session.session_key):
-		return signIn(request, 'Register Error: You must sign-in to view the product listing page', 'error')
+		return redirect('signIn', queryString='You must be signed into the register to view the product listing page')
 
 	# Render the product lising page
 	return render(request, 'productListing.html',
 				 {'products': Product.objects.all(), 
-				 'queryString': queryString, 
-				 'queryType': queryType})
+				 'queryString': queryString})
 
 
 # Process all client requests made to the product details page
-def productDetails(request, productUUID, queryString='default', queryType='default'):
+def productDetails(request, productUUID, queryString=None):
 
 	# Require an active session to view the product details page
 	if (not request.session.session_key):
-		return signIn(request, 'Register Error: You must sign-in to view the product details page', 'error')
+		return redirect('signIn', queryString='You must be signed into the register to view the product details page')
 
 	# Render the product details page
 	return render(request, 'productDetails.html', 
 				 {'product': get_object_or_404(Product, productUUID=productUUID), 
-				 'queryString': queryString,
-				 'queryType': queryType})
+				 'queryString': queryString})
 
 
 # Process all client requests made to the product creation page
-def productCreate(request, queryString='default', queryType='default'):
+def productCreate(request, queryString=None):
 
 	# Require an active session to view the product creation page
 	if (not request.session.session_key):
-		return signIn(request, 'Register Error: You must sign-in to view the product creation page', 'error')
+		return redirect('signIn', queryString='You must be signed into the register to view the create product page')
 
 	# Render the product creation page
 	return render(request, 'productCreate.html', 
-				 {'queryString': queryString,
-				 'queryType': queryType})
+				 {'queryString': queryString})
 
 
 # Process all client requests made to the register menu page
-def registerMenu(request, queryString='default', queryType='default'):
+def registerMenu(request, queryString=None):
 
 	# Require an active session to view the register menu page
 	if (not request.session.session_key):
-		return signIn(request, 'Register Error: You must sign-in to view the register menu page', 'error')
+		return redirect('signIn', queryString='You must be signed into the register to view the register menu page')
 
 	# Render the register menu page
 	return render(request, 'registerMenu.html', 
-				 {'queryString': queryString,
-				 'queryType': queryType})
+				 {'queryString': queryString})
 
 
 # Process all client requests for page not found errors
@@ -139,182 +224,34 @@ def register_404(request, exception):
 
 
 # Process all client requests made to the employee details page
-def employeeDetails(request, queryString='default', queryType='default'):
+def employeeDetails(request, queryString=None, employeeID=None):
+
+	# TODO: Make the employee stuff get called through the
+	# ajax scripts so the site URLs are consistent and do not
+	# break
 
 	# Always permit the request if there are no users in the database
 	if (not Employee.objects.count()):
 		return render(request, 'employeeDetails.html', 
-					 {'queryString': 'databaseEmpty', 
-					 'queryType': 'information'})
+					 {'database': 'empty'})
 
 	# Require an active session to view the employee details page
 	if (not request.session.session_key):
-		return signIn(request, 'Register Error: You must sign-in to view the employee details page', 'error')
+		return redirect('signIn', queryString='You must be signed into the register to view the employee details page')
 
 	# Process a request when an employeeID is passed in the URL
-	if (str(queryString).isdigit() and int(queryString) > 0):
+	if (employeeID):
 		return render(request, 'employeeDetails.html', 
-					 {'employee': get_object_or_404(Employee, employeeID=int(queryString)), 
-					 'employeeID': int(queryString),
-					 'queryType': queryType})
+					 {'employee': get_object_or_404(Employee, employeeID=employeeID), 
+					 'employeeID': employeeID})
 
 	# Render the employee details page
-	return render(request, 'employeeDetails.html', 
-				 {'queryString': queryString, 
-				 'queryType': queryType})
-
-
-# Process all client requests made to the employee create view
-def employeeCreate(request, queryString='default', queryType='default'):
-
-	"""
-	Only require an active session to access this view if there are
-	one or more employees in the database. This will ensure that the
-	very first employee will be able to create a new account without
-	any issues. However, every attempt to create a new account after
-	the very first employee will require an active session. We also
-	perform some additional checks in the template to ensure only
-	a manager can create a new account
-	"""
-	if (not request.session.session_key and Employee.objects.count()):
-		return signIn(request, 'Register Error: You must sign-in to view the employee details page', 'error')
-
-	# Listen for incoming POST requests
-	if (request.method == "POST"):
-
-		"""
-		The provided documentation never explicitly said if the employeeID's
-		are suppose to be randomly generated or not. However, I am going to
-		assume they are randomly generated, because there is never a time
-		when the employeeID field is editable by any person, even a manager.
-		"""
-		employeeID = randint(10000, 99999)
-
-		# This value will only be true if there are no other employees in the database
-		employeeInitial = False
-
-		# Grab the rest of the data from the post request
-		employeeFirstName = request.POST.get('employeeFirstName')
-		employeeLastName = request.POST.get('employeeLastName')
-		employeePassword = request.POST.get('employeePassword')
-		employeeClassification = request.POST.get('employeeClassification')
-
-		# Do not accept a blank last name
-		if (employeeLastName == ' '):
-			# The request failed. Return to the signIn page with an appropriate error message
-			return employeeDetails(request, 'Register Error: The last name may not be blank', 'error')
-
-		# Do not accept a blank password
-		if (employeePassword == ' '):
-			return employeeDetails(request, 'Register Error: The password may not be blank', 'error')
-
-		# Process the special case when the initial employee is being created
-		if (not Employee.objects.count()):
-			employeeClassification = 2
-			employeeInitial = True
-
-		# This is an additional, paranoid check to avoid employeeID collisions
-		if (Employee.objects.filter(employeeID=employeeID).exists()):
-			employeeID = randint(10000, 99999)
-
-		# Write the new employee record to the database
-		Employee.objects.create(employeeID=employeeID,
-								employeeFirstName=employeeFirstName,
-								employeeLastName=employeeLastName,
-								employeePassword=employeePassword,
-								employeeClassification=employeeClassification)
-
-		"""
-		employeeInitial being true means that this was the very first
-		employee being created. So, as per the instructions, we need
-		to redirect them back to the sign-in page with the ID field
-		automatically populated
-		"""
-		if (employeeInitial):
-			return signIn(request, employeeID, 'redirect')
-
-		"""
-		employeeInitial being false means that this is not the very
-		first employee being created. So, as per the instructions,
-		we just need to redirect them to the newly created employee
-		profile
-		"""
-		if (not employeeInitial):
-			return employeeDetails(request, employeeID, 'successCreate')
-
-	# Render the employee details page if an account is not being made
-	return HttpResponseRedirect('/employeeDetails')
-
-
-# Process all client requests made to the employee update view
-def employeeUpdate(request, queryString='default', queryType='default'):
-
-	# Require an active session to view the employee details page
-	if (not request.session.session_key):
-		return signIn(request, 'Register Error: You must sign-in to view the employee details page', 'error')
-
-	# Listen for incoming POST requests
-	if (request.method == "POST"):
-
-		# Grab the rest of the data from the post request
-		employeeID = request.POST.get('employeeID')
-		employeeFirstName = request.POST.get('employeeFirstName')
-		employeeLastName = request.POST.get('employeeLastName')
-		employeePassword = request.POST.get('employeePassword')
-		employeeClassification = request.POST.get('employeeClassification')
-
-		"""
-		The queryString and queryType are used in a weird way here
-		because the errors have to be redirected back to a specific
-		employee profile. So, I used the queryString to hold the
-		employeeID and used the queryType to signal the type of
-		error so I can just generate the appropriate response
-		in the template.
-		"""
-
-		# Do not accept a blank first name
-		if (employeeFirstName == ' '):
-			return employeeDetails(request, employeeID, 'errorFirst')
-
-		# Do not accept a blank last name
-		if (employeeLastName == ' '):
-			return employeeDetails(request, employeeID, "errorLast")
-
-		# Do not accept a blank password
-		if (employeePassword == ' '):
-			return employeeDetails(request, employeeID, "errorPass")
-
-		# Check if the provided employeeID maps to an existing user
-		if (not Employee.objects.filter(employeeID=employeeID).exists()):
-			return employeeDetails(request, employeeID, "employeeNoExist")
-
-
-		# Update the employee database record
-		Employee.objects.filter(employeeID=employeeID).update(employeeFirstName=employeeFirstName,
-															  employeeLastName=employeeLastName,
-															  employeePassword=employeePassword,
-															  employeeClassification=employeeClassification)
-
-		# Return to the employee profile with a success response
-		return employeeDetails(request, employeeID, "successUpdate")
-
-	# Render the employee details page if an account is not being updated
-	return HttpResponseRedirect('/employeeDetails')
+	return render(request, 'employeeDetails.html',
+				 {'queryString': queryString})
 
 
 # Process all client requests made to the signIn page
-def signIn(request, queryString='default', queryType='default'):
-
-	"""
-	When queryType is set to redirect this means we are being redirected here from
-	the employee creatiion view and an initial employee has been created. So, we 
-	need to pass the appropriate information to automatically populate the ID field
-	"""
-	if (str(queryString).isdigit() and queryType == "redirect"):
-		return render(request, 'signin.html', 
-					 {'employees': Employee.objects.all(), 
-					 'employeeID': int(queryString), 
-					 'queryType': queryType})
+def signIn(request, employeeID=None, queryString=None):
 
 	# Listen for incoming POST requests
 	if (request.method == 'POST'):
@@ -325,27 +262,24 @@ def signIn(request, queryString='default', queryType='default'):
 
 		# EmployeeID must be an integer
 		if (not str(employeeID).isdigit()):
-			queryString = 'Register Error: The employeeID must be a valid integer'
 			return render(request, 'signin.html', 
 						 {'employees': Employee.objects.all(), 
 						 'queryString': queryString,
-						 'queryType': 'error'})
+						 'queryType': 'errorEmployeeInt'})
 
 		# Do not accept a blank employeeID
-		if (employeeID == ' '):
-			queryString = 'Register Error: The employeeID may not be blank'
+		if (str(employeeID).strip() == ''):
 			return render(request, 'signin.html', 
 						 {'employees': Employee.objects.all(), 
 						 'queryString': queryString,
-						 'queryType': 'error'})
+						 'queryType': 'errorEmployeeID'})
 
 		# Do not accept a blank password
-		if (employeePassword == ' '):
-			queryString = 'Register Error: The password may not be blank'
+		if (str(employeePassword).strip() == ''):
 			return render(request, 'signin.html', 
 						 {'employees': Employee.objects.all(), 
 						 'queryString': queryString,
-						 'queryType': 'error'})
+						 'queryType': 'errorPassword'})
 
 		# Check if an employee account with the provided employeeID and password exists
 		employee = Employee.objects.filter(employeeID=employeeID)
@@ -399,27 +333,23 @@ def signIn(request, queryString='default', queryType='default'):
 				Employee.objects.filter(employeeID=activeEmployee.employeeID).update(employeeActive=True)
 
 				# The employee signed into the register. Redirect them to the main menu
-				return registerMenu(request)
+				return redirect('registerMenu')
 			else:
 				# The request failed. Return to the signIn page with an appropriate error message
-				queryString = 'Register Error: Bad employeeID or password'
-				return render(request, 'signin.html', 
-							 {'employees': Employee.objects.all(), 
-						 	'queryString': queryString,
-						 	'queryType': 'error'})
+				return redirect('signIn', queryString='Bad EmployeeID or password')
 		else:
 			# The request failed. Return to the signIn page with an appropriate error message
-			queryString = 'Register Error: Bad employeeID or password'
-			return render(request, 'signin.html', 
-						 {'employees': Employee.objects.all(), 
-						 'queryString': queryString,
-						 'queryType': 'error'})
+			return redirect('signIn', queryString='Bad EmployeeID or password')
+
+	if (employeeID):
+		return render(request, 'signin.html', 
+					 {'employees': Employee.objects.all(), 
+					 'employeeID': employeeID})
 
 	# Render the sign-in page when no one is trying to sign into the register
 	return render(request, 'signin.html', 
 				 {'employees': Employee.objects.all(), 
-				 'queryString': queryString,
-				 'queryType': queryType})
+				 'queryString': queryString})
 
 
 # Process all client requests made to the signOff page
