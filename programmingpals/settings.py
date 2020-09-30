@@ -94,10 +94,10 @@ your code to GitHub
 Failure to follow this rule will cause our live demo to eventually break and
 will expose our database username/password to anyone who looks at the code
 """
-DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
+#DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
 # You can comment out the database entry above and add a new entry below this line for local testing
-#DATABASES = {'default': dj_database_url.config(default='DATABASE_URL_GOES_HERE')}
+DATABASES = {'default': dj_database_url.config(default='postgres://qmozdzzwkzbppv:50ff5a0c6ce1ad1f6f77d1c1baa529538cce567e9062c09422a3dd6af9969319@ec2-54-166-107-5.compute-1.amazonaws.com:5432/dc6eu7nlt659pq')}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
