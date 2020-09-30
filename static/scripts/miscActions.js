@@ -1,5 +1,10 @@
 function displayMessage(text, type) {
 
+    //Clear previous message
+    if (document.getElementById('alert').firstChild != null) {
+        document.getElementById('alert').removeChild(document.getElementById('alert').firstChild);
+    }
+
 	// Create a div element and assign it to the alert class from the CSS file
 	alertDiv = document.createElement('div');
 	alertDiv.classList.add('alert');

@@ -44,12 +44,12 @@
     <!--FIX!!! Don't know where to redirect some pages to-->
     <!--FIX!!! Manager viewing only-->
     <div class="grid">
-        <button class="button" onclick="alert('Functionality has not yet been implemented.');">Start Transaction</button>
+        <button class="button" onclick="displayMessage('Functionality has not yet been implemented.', 'error');">Start Transaction</button>
         <button class="button" onclick="window.location.href='/productListing';">View Products</button>
         {% if request.session.employeeClassification > 0 %}
         <button class="button" onclick="window.location.href='/employeeDetails';">Create Employee</button>
-        <button class="button" onclick="alert('Functionality has not yet been implemented.');">Sales Report</button>
-        <button class="button" onclick="alert('Functionality has not yet been implemented.');">Cashier Report</button>
+        <button class="button" onclick="displayMessage('Functionality has not yet been implemented.', 'error');">Sales Report</button>
+        <button class="button" onclick="displayMessage('Functionality has not yet been implemented.', 'error');">Cashier Report</button>
         {% endif %}
     </div>
 </body>
