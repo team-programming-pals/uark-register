@@ -57,7 +57,7 @@ function updateProduct() {
 	would like to send to the API */
 	const actionURL = ('/products/manage/' + getProductUUID() + '/');
 	const securityToken = getCSRFToken('csrftoken');
-	const productData = {productUUID: getProductUUID(), productCode: getProductCode(), productCount: getProductCount()};
+	const productData = {productCode: getProductCode(), productCount: getProductCount()};
 
 	// As per the comment in apiRequest.js, we need to use the PUT verb to update an existing record
 	ajaxPut(actionURL, productData, securityToken, (callbackResponse) => {
@@ -91,22 +91,14 @@ function deleteProduct() {
 	/* Set up the request by specifying the correct API endpoint,
 	grabbing the unique csrf token and collecting the data we
 	would like to send to the API */
-	const actionURL = ('/products/manage/' + getProductUUID() + '/');
-	const securityToken = getCSRFToken('csrftoken');
+	const actionURL = ('/api/products/' + getProductUUID() + '/');
 
 	// As per the comment in apiRequest.js, we need to use the DELETE verb to delete an existing record
-	ajaxDelete(actionURL, securityToken, (callbackResponse) => {
+	ajaxDelete(actionURL, (callbackResponse) => {
 
 	// Use the status code stored in our callbackResponse to see if the request was successful
 	if (isSuccessResponse(callbackResponse)) {
-		// Grab the respose from the API end-point and parse it
-		var apiResponse = JSON.parse(callbackResponse.apiResponse);
-
-		// Display success messages
-		if (apiResponse['queryResponse']){
-			displayMessage(apiResponse['queryResponse'], 'success');
-		}
-
+		window.location.href = '/productListing/queryString=The product was successfully deleted';
 	}
 
 	// Use the status code stored in our callbackResponse to see if the request failed

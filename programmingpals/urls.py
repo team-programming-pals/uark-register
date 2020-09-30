@@ -41,6 +41,7 @@ urlpatterns = [
 	# These routes point to normal pages
 	path('registerMenu/', views.registerMenu, name='registerMenu'),
 	path('productListing/', views.productListing, name='productListing'),
+	path('productDetails/', views.productCreate, name='productDetails'),
 	path('productCreate/', views.productCreate, name='productCreate'),
 	path('employeeDetails/', views.employeeDetails, name='employeeDetails'),
 	path('signIn/', views.signIn, name='signIn'),
@@ -59,7 +60,7 @@ urlpatterns = [
 
 	# These routes point to the product management APIView
 	path('products/manage/', views.manageProducts.as_view()),
-	path('products/manage/<uuid:employeeUUID>/', views.manageProducts.as_view()),
+	path('products/manage/<uuid:productUUID>/', views.manageProducts.as_view()),
 ]
 
 # Display a custom template when a page is not found

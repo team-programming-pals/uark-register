@@ -56,10 +56,12 @@
 			<input type="hidden" id="productUUID" name="productUUID" value="{{ product.productUUID }}">
 			<hr>
 			<input type="submit" value="Save" class="button extend">
-			<button class="button delete" onclick="javascript:deleteProduct();window.location.href='/productListing';">Delete</button>
 			{% csrf_token %}
 		</div>
 	</form> 
+	<!-- If this button is left in the form then it will try to run the
+		 update and delete function at the same time when it is clicked -->
+	<button class="button delete" onclick="javascript:deleteProduct()">Delete</button>
 	{% endif %}
 	<br>
 		
