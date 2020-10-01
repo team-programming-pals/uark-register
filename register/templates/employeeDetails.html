@@ -53,7 +53,7 @@
 	{% if employeeID > 0 and request.session.employeeClassification > 0 %}
 		<!-- When the page has an EmployeeID passed in the URL and a manager
 		is visiting the page, render the employee update form for them -->
-		<form action="javascript:updateEmployee();">
+		<form action="javascript:updateEmployee();" onsubmit="return validateEmployee()">
 			<div class="container">
 				<hr>
 				<input type="hidden" id="employeeUUID" name="employeeUUID" value="{{ employee.employeeUUID }}" required><br>
@@ -88,7 +88,7 @@
 	{% elif database == 'empty' or request.session.employeeClassification > 0 %}
 		<!-- When there are no employees in the database or if a manager is
 		is visiting the page, render the employee creation form for them -->
-		<form action="javascript:createEmployee();">
+		<form action="javascript:createEmployee();" onsubmit="return validateEmployee()">
 			<div class="container">
 				<hr>
 				<label for="First Name">First Name:</label>
