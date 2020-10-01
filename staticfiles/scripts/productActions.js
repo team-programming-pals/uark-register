@@ -92,15 +92,20 @@ function deleteProduct() {
 	grabbing the unique csrf token and collecting the data we
 	would like to send to the API */
 	const actionURL = ('/products/manage/' + getProductUUID() + '/');
-	const securityToken = getCSRFToken('csrftoken');
 
 	// As per the comment in apiRequest.js, we need to use the DELETE verb to delete an existing record
-	ajaxDelete(actionURL, securityToken, (callbackResponse) => {
+	ajaxDelete(actionURL, (callbackResponse) => {
 
 	// Use the status code stored in our callbackResponse to see if the request was successful
 	if (isSuccessResponse(callbackResponse)) {
-		alert('I am going off!');
-		window.location.href = '/productListing/?queryString=The product was successfully deleted';
+		// Grab the respose from the API end-point and parse it
+		var apiResponse = JSON.parse(callbackResponse.apiResponse);
+
+		// Display success messages
+		if (apiResponse['queryResponse']){
+			displayMessage(apiResponse['queryResponse'], 'success');
+		}
+
 	}
 
 	// Use the status code stored in our callbackResponse to see if the request failed

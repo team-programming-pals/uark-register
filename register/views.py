@@ -73,8 +73,14 @@ class manageProducts(APIView):
 		product = Product.objects.get(productUUID=productUUID)
 		serializer = productSerializer(product, data=request.data)
 		if serializer.is_valid():
-			serializer.save()
-			return Response({'queryResponse': 'The product record was successfully updated'}, status=status.HTTP_201_CREATED)
+			if (not Product.objects.filter(productUUID=productUUID).exists()):
+				return Response({'queryResponse': 'The product you are trying to delete does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+			if (request.session['employeeClassification'] > 0):
+				serializer.save()
+				return Response({'queryResponse': 'The product record was successfully updated'}, status=status.HTTP_201_CREATED)
+			else:
+				return Response({'queryResponse': 'You must be a manager to update product records'}, status=status.HTTP_400_BAD_REQUEST)
 
 		"""
 		These if statements were the easiest way I could find
@@ -93,10 +99,17 @@ class manageProducts(APIView):
 		return Response({'queryResponse': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 	def delete(self, request, productUUID, format=None):
-		product = Product.objects.get(productUUID=productUUID)
-		product.delete()
-		return Response({'queryResponse': 'The product record was successfully deleted'}, status=status.HTTP_204_NO_CONTENT)
+		if (not Product.objects.filter(productUUID=productUUID).exists()):
+			return Response({'queryResponse': 'The product you are trying to delete does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
+		if (request.session['employeeClassification'] > 0):
+			Product.objects.filter(productUUID=productUUID).delete()
+			return Response({'queryResponse': 'The product record was successfully deleted'}, status=status.HTTP_201_CREATED)
+		else:
+			return Response({'queryResponse': 'You must be a manager to delete product records'}, status=status.HTTP_400_BAD_REQUEST)
+
+		# There is some input validation problem I did not check for
+		return Response({'queryResponse': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 """
 manageEmployees is a class-based view which is used as a
