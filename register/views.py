@@ -143,9 +143,6 @@ class manageEmployees(APIView):
 		if (str(serializer.data['employeeClassification']).strip() == ''):
 			return Response({'queryResponse': 'You must select an employee type'}, status=status.HTTP_400_BAD_REQUEST)
 
-		if (str(serializer.data['employeeFirstName']).strip() == ''):
-			return Response({'queryResponse': 'The first name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
-
 		# There is some input validation problem I did not check for
 		return Response({'queryResponse': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -172,9 +169,6 @@ class manageEmployees(APIView):
 
 		if (str(serializer.data['employeeClassification']).strip() == ''):
 			return Response({'queryResponse': 'You must select an employee type'}, status=status.HTTP_400_BAD_REQUEST)
-
-		if (str(serializer.data['employeeFirstName']).strip() == ''):
-			return Response({'queryResponse': 'The first name field may not be left blank'}, status=status.HTTP_400_BAD_REQUEST)
 
 		# There is some input validation problem I did not check for
 		return Response({'queryResponse': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -329,8 +323,11 @@ def signIn(request, employeeID=None, queryString=None):
 				activeSessionCheck = ActiveUser.objects.filter(activeEmployeeUUID=activeEmployee.employeeUUID)
 
 				if (activeSessionCheck.exists()):
-					# Update the employees ActiveUser session key
-					ActiveUser.objects.filter(activeEmployeeUUID=activeEmployee.employeeUUID).update(activeSessionKey=activeSessionKey)
+					# Update the employees ActiveUser session
+					ActiveUser.objects.filter(activeEmployeeUUID=activeEmployee.employeeUUID).update(activeEmployeeUUID=activeEmployee.employeeUUID,
+																									 activeName=activeName,
+											  														 activeClassification=activeEmployee.employeeClassification, 
+											  														 activeSessionKey=activeSessionKey)
 				else:
 					# Create a new ActiveUser database record for the employee
 					activeUser = ActiveUser.objects.create(activeEmployeeUUID=activeEmployee.employeeUUID,
