@@ -28,14 +28,7 @@ function createProduct() {
 
 	// Use the status code stored in our callbackResponse to see if the request was successful
 	if (isSuccessResponse(callbackResponse)) {
-		// Grab the respose from the API end-point and parse it
-		var apiResponse = JSON.parse(callbackResponse.apiResponse);
-
-		// Display success messages
-		if (apiResponse['queryResponse']){
-			displayMessage(apiResponse['queryResponse'], 'success');
-		}
-
+		window.location.href='/productListing';
 	}
 
 	// Use the status code stored in our callbackResponse to see if the request failed
@@ -98,14 +91,7 @@ function deleteProduct() {
 
 	// Use the status code stored in our callbackResponse to see if the request was successful
 	if (isSuccessResponse(callbackResponse)) {
-		// Grab the respose from the API end-point and parse it
-		var apiResponse = JSON.parse(callbackResponse.apiResponse);
-
-		// Display success messages
-		if (apiResponse['queryResponse']){
-			displayMessage(apiResponse['queryResponse'], 'success');
-		}
-
+		window.location.href='/productListing';
 	}
 
 	// Use the status code stored in our callbackResponse to see if the request failed

@@ -102,13 +102,16 @@
 				
 				<label for="PasswordConfirm">Confirm Password:</label>
 				<input type="text" id="employeePasswordConfirm" name="employeePasswordConfirm" required><br><br>
-				
+				{% if database != 'empty' %}
 				<label for="eType">Select employee type:</label>
 				<select name="employeeClassification" id="employeeClassification" required>
 					<option value=0>Cashier</option>
 					<option value=1>Shift Manager</option>
 					<option value=2>General Manager</option>
 				</select><br><br>
+				{% elif database == 'empty' %}
+				<input type="hidden" id="employeeClassification", name="employeeClassification" value="2">
+				{% endif %}
 				{% csrf_token %}
 				<hr>
 				<button type="submit" class="button extend">Save</button>

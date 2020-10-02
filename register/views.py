@@ -185,7 +185,7 @@ class manageEmployees(APIView):
 def productListing(request, queryString=None):
 
 	# Require an active session to view the product listing page
-	if (not request.session.session_key):
+	if (not request.session.session_key or not Employee.objects.count()):
 		return redirect('signIn', queryString='You must be signed into the register to view the product listing page')
 
 	# Render the product lising page
@@ -198,7 +198,7 @@ def productListing(request, queryString=None):
 def productDetails(request, productUUID, queryString=None):
 
 	# Require an active session to view the product details page
-	if (not request.session.session_key):
+	if (not request.session.session_key or not Employee.objects.count()):
 		return redirect('signIn', queryString='You must be signed into the register to view the product details page')
 
 	# Render the product details page
@@ -211,7 +211,7 @@ def productDetails(request, productUUID, queryString=None):
 def productCreate(request, queryString=None):
 
 	# Require an active session to view the product creation page
-	if (not request.session.session_key):
+	if (not request.session.session_key or not Employee.objects.count()):
 		return redirect('signIn', queryString='You must be signed into the register to view the create product page')
 
 	# Render the product creation page
@@ -223,7 +223,7 @@ def productCreate(request, queryString=None):
 def registerMenu(request, queryString=None):
 
 	# Require an active session to view the register menu page
-	if (not request.session.session_key):
+	if (not request.session.session_key or not Employee.objects.count()):
 		return redirect('signIn', queryString='You must be signed into the register to view the register menu page')
 
 	# Render the register menu page
@@ -238,10 +238,6 @@ def register_404(request, exception):
 
 # Process all client requests made to the employee details page
 def employeeDetails(request, queryString=None, employeeID=None):
-
-	# TODO: Make the employee stuff get called through the
-	# ajax scripts so the site URLs are consistent and do not
-	# break
 
 	# Always permit the request if there are no users in the database
 	if (not Employee.objects.count()):
