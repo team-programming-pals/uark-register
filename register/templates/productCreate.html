@@ -11,6 +11,13 @@
 	<link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
 </head>
 
+	{% if request.session.employeeClassification == 0 %}
+	<!-- Redirect a cashier as quickly as possible to avoid portions
+	of the product creation page being visible before they are
+	redirected back to the main menu -->
+	<script> window.location.href='/registerMenu/queryString=You must be a manager to access the product creation page'; </script>
+	{% endif %}
+
 <body>
 	<header class="banner small">
 		<h1>Uark Register</h1>
