@@ -156,7 +156,7 @@ function validateEmployee() {
 	employeePassword = getEmployeePassword();
 	employeePasswordConfirm = getEmployeePasswordConfirm();
 	employeeClassification = getEmployeeClassification();
-	if(validatePassword(getEmployeePassword(), getEmployeePasswordConfirm()) == false){
+	if(validatePassword(employeePassword, employeePasswordConfirm) == false){
 		return false;
 	}
 	
