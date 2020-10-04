@@ -131,37 +131,71 @@ function validateSignIn() {
 
 	return true;
 }
+function validatePassword(pass1, pass2){
+	//case: passwords do not match
+	if(pass1 != pass2){
+		displayMessage('Employee passwords do not match.', 'error');
+		return false;
+	}
+
+}
+
+
 
 function validateEmployee() {
 	/*
-
-	TASK 10
-
-	This function needs to be written to do the following:
-
-	1. Compare  getEmployeePasswordConfirm with getEmployeePassword to see if they match
-	        - If they do not match, display an error and return false
-
-	2. Make sure no field is allowed to be blank - (variable.trim() == 0) would return true if the variable is blank
-			- If the field is blank, display an error and retrun false. All fields should be checked
-
-	3. Make sure the EmployeID and Classification variables are positive integers
-				- The only valid choices for Classification are 0 (cashier), 1 (shift manager), 2 (general manager)
-				- If they are not positive integers, display an error and return false
-				- If Classification is not either 0, 1, or 2 display an error and return false
-
-
-	You can add an error message using this code before returning false:
-
-	displayMessage('What you want to say here', 'error');
-
-
-	If the function makes it to the bottom without turning false, it will return true
-	and the submission form for the EmployeeDetails page will be allowed to make the
-	request. This code has already been taken care of. All you need to do is make this function.
-	You also do not need to worry about sending any HTTP requests.
-	
+		possible things to check for later:
+		-first character is a blank
+		-any blanks?
+		-is employee id and classification handled correctly?
+		-size of password and other blanks
+		
 	*/
+	employeeFirstName = getEmployeeFirstName();
+	employeeLastName = getEmployeeLastName();
+	employeePassword = getEmployeePassword();
+	employeePasswordConfirm = getEmployeePasswordConfirm();
+	employeeClassification = getEmployeeClassification();
+	if(validatePassword(getEmployeePassword(), getEmployeePasswordConfirm()) == false){
+		return false;
+	}
+	
+	if (employeeFirstName.trim() == "") {
+		displayMessage('The First Name field may not be blank', 'error');
+		return false;
+	}
 
+	if (employeeLastName.trim() == "") {
+		displayMessage('The Last Name field may not be blank', 'error');
+		return false;
+	}
+	
+	if (employeePassword.trim() == "") {
+		displayMessage('The Password field may not be blank', 'error');
+		return false;
+	}
+
+	if (employeePasswordConfirm.trim() == "") {
+		displayMessage('The Password Confirmation field may not be blank', 'error');
+		return false;
+	}
+	
+	if (employeePasswordConfirm.trim() == "") {
+		displayMessage('The Password Confirmation field may not be blank', 'error');
+		return false;
+	}
+
+	if (employeeClassification){
+		if((employeeClassification != 0)&&(employeeClassification != 1)&&(employeeClassification != 2)) {
+		displayMessage('Employee Classification must be 0, 1, or 2.', 'error');
+		return false;}
+	}
+	
+	if(employeeID){
+		if(employeeID < 0){
+			displayMessage('Employee ID must be a positive integer.', 'error');
+			return false;
+		}
+	}
 	return true;
 }
