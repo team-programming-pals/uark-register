@@ -45,16 +45,6 @@
 	<script>displayMessage("{{queryString}}", 'error');</script>
 	{% endif %}
 
-
-	<!-- Task 14:
-		If the user is not a shift or general manager (request.session.employeeClassification > 0)
-		then the delete/save buttons should not be displayed and the text inputs should be disabled 
-
-		Check out the other template pages if you need a little help. Very similar tasks have been done
-		in the other templates
-
-		None of the server-side functionality needs to be done.
-	-->
 	{% if product.productUUID %}
 	<form action="javascript:updateProduct();" onsubmit="return validateProduct()">
 		<div class="container">
