@@ -35,12 +35,11 @@ class productViewSet(viewsets.ModelViewSet):
 
 class employeeViewSet(viewsets.ModelViewSet):
 	queryset = Employee.objects.all()
-
 	serializer_class = employeeSerializer
+
 class activeUserViewSet(viewsets.ModelViewSet):
 	queryset = ActiveUser.objects.all()
 	serializer_class = ActiveUserSerializer
-
 
 """
 manageProducts is a class-based view which is used as a
@@ -381,3 +380,22 @@ def signOff(request):
 
 	# Redirect the user to the main page
 	return HttpResponseRedirect('/signIn')
+
+
+def transactionMenu(request):
+	# Require an active session to view the product creation page
+	if (not request.session.session_key or not Employee.objects.count()):
+		return redirect('signIn', queryString='You must be signed into the register to view the transaction page')
+
+	if (request.method == 'POST'):
+		test = request.POST.get('employeeUUID')
+		return HttpResponse(test)
+
+	if (request.method == 'GET'):
+		query = request.GET.get('query')
+		if (query):
+			foundProducts = Product.objects.filter(productCode__icontains=query)
+			currentEmployee = Employee.objects.values_list('employeeUUID', flat=True).get(employeeID=request.session['employeeID'])
+			return render (request, 'transaction.html', {'products': foundProducts, 'employeeUUID': currentEmployee })
+		else:
+			return render (request, 'transaction.html')

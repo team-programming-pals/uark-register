@@ -40,14 +40,32 @@
     <script>displayMessage("{{queryString}}", 'error');</script>
     {% endif %}
 
-    <div class="grid">
-        <button class="button" onclick="window.location.href='/transactionMenu'">Start Transaction</button>
-        <button class="button" onclick="window.location.href='/productListing';">View Products</button>
-        {% if request.session.employeeClassification > 0 %}
-        <button class="button" onclick="window.location.href='/employeeDetails';">Create Employee</button>
-        <button class="button" onclick="displayMessage('Functionality has not yet been implemented.', 'error');">Sales Report</button>
-        <button class="button" onclick="displayMessage('Functionality has not yet been implemented.', 'error');">Cashier Report</button>
-        {% endif %}
-    </div>
+    <form action="/transactionMenu/" method="GET">
+        <input name="query" type="text" placeholder="Search...">
+    </form>
+
+      <br />
+      <br />
+
+      {% if not products %}
+      <p>Search for a product to add to your cart.</p>
+      {% endif %}
+
+      <section class="productCard">
+        {% for product in products %}
+            <article class="card">
+                <h1>{{ product.productCode }}</h1>
+                <p class="price">${{product.productPrice | floatformat:2}}</p>
+                <p>Stock: {{ product.productCount }}</p>
+                <p>Available Since: {{ product.get_created_date }}</p>
+                <form action="/transactionMenu/" method="POST">
+                <input type="hidden" name="employeeUUID" value="{{employeeUUID}}">
+                <input type="hidden" name="productCode" value="{{product.productCode}}">
+                {% csrf_token %}
+                <p><button class="button product" onclick="this.form.submit();">Add to Cart</button></p>
+                </form>
+            </article>
+        {% endfor %}
+        </section>
 </body>
 </html>

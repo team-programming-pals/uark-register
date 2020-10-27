@@ -56,3 +56,19 @@ class ActiveUserSerializer(serializers.HyperlinkedModelSerializer):
 		model = ActiveUser
 		fields = ('activeUUID', 'activeEmployeeUUID', 'activeName', 'activeClassification',
 					'activeSessionKey', 'activeCreationDate')
+
+
+class transactionSerializer(serializers.HyperlinkedModelSerializer):
+
+	"""
+	Tell DRF a little more about our active user model so it will
+	help us format the information correctly
+	"""
+	activeName = serializers.CharField(required=True)
+	activeClassification = serializers.IntegerField(required=True)
+	activeSessionKey = serializers.CharField(required=True)
+
+	class Meta:
+		model = ActiveUser
+		fields = ('activeUUID', 'activeEmployeeUUID', 'activeName', 'activeClassification',
+					'activeSessionKey', 'activeCreationDate')

@@ -51,7 +51,7 @@
 	{% for product in products %}
 		<article class="card">
 			<h1>{{ product.productCode }}</h1>
-			<p class="price">$0.00</p>
+			<p class="price">${{product.productPrice | floatformat:2}}</p>
 			<p>Stock: {{ product.productCount }}</p>
 			<p>Available Since: {{ product.get_created_date }}</p>
 			<p><button class="button product" onclick="window.location.href='/{{ product.get_product_url }}';">View Details</button></p>

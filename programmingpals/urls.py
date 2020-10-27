@@ -44,6 +44,7 @@ urlpatterns = [
 	path('productDetails/', views.productCreate, name='productDetails'),
 	path('productCreate/', views.productCreate, name='productCreate'),
 	path('employeeDetails/', views.employeeDetails, name='employeeDetails'),
+	path('transactionMenu/', views.transactionMenu, name='transactionMenu'),
 	path('signIn/', views.signIn, name='signIn'),
 	path('signOff/', views.signOff, name='signOff'),
 
