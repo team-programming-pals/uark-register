@@ -21,7 +21,7 @@ router.register(r'activeusers', views.activeUserViewSet)
 
 
 urlpatterns = [
-	
+
 	# This route point to our default page
 	path('', views.signIn, name='signIn'),
 
@@ -31,6 +31,7 @@ urlpatterns = [
 	path('productDetails/queryString=<str:queryString>/', views.productDetails, name='productDetails'),
 	path('productCreate/queryString=<str:queryString>/', views.productCreate, name='productCreate'),
 	path('registerMenu/queryString=<str:queryString>/', views.registerMenu, name='registerMenu'),
+	path('transactionMenu/queryString=<str:queryString>/', views.transactionMenu, name='transactionMenu'),
 	path('signIn/queryString=<str:queryString>/', views.signIn, name='signIn'),
 
 	# These routes point to pages that have some sort of ID passed to them
@@ -45,6 +46,9 @@ urlpatterns = [
 	path('productCreate/', views.productCreate, name='productCreate'),
 	path('employeeDetails/', views.employeeDetails, name='employeeDetails'),
 	path('transactionMenu/', views.transactionMenu, name='transactionMenu'),
+	path('addCartItem/', views.addCartItem, name='addCartItem'),
+	path('deleteCartItem/', views.deleteCartItem, name='deleteCartItem'),
+	path('updateCartQuantity/', views.updateCartQuantity, name='updateCartQuantity'),
 	path('signIn/', views.signIn, name='signIn'),
 	path('signOff/', views.signOff, name='signOff'),
 

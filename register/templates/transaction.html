@@ -58,14 +58,50 @@
                 <p class="price">${{product.productPrice | floatformat:2}}</p>
                 <p>Stock: {{ product.productCount }}</p>
                 <p>Available Since: {{ product.get_created_date }}</p>
-                <form action="/transactionMenu/" method="POST">
+                <form action="/addCartItem/" method="POST">
                 <input type="hidden" name="employeeUUID" value="{{employeeUUID}}">
-                <input type="hidden" name="productCode" value="{{product.productCode}}">
+                <input type="hidden" name="productUUID" value="{{product.productUUID}}">
                 {% csrf_token %}
                 <p><button class="button product" onclick="this.form.submit();">Add to Cart</button></p>
                 </form>
             </article>
         {% endfor %}
         </section>
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <p>TESTING (Showing cart):</p>
+
+        {% for items in cart %}
+        <table border=1px>
+            <tr>
+              <th>Product Name</th>
+              <th>Quantity</th>
+              <th>Delete</th>
+            </tr>
+            {% for product in items.products.all %}
+            <tr>
+              <td>{{product}}</td>
+              <td>
+                <form action="/updateCartQuantity/" method="POST">
+                  <input type="text" name="quantity" value="{{product.quantity}}">
+                  <input type="hidden" name="productUUID" value="{{product.product.productUUID}}">
+                  {% csrf_token %}
+                  <p><button class="button product" onclick="this.form.submit();">Update Quantity</button></p>
+                </form>
+                </td>
+              <td>
+              <form action="/deleteCartItem/" method="POST">
+                <input type="hidden" name="productUUID" value="{{product.product.productUUID}}">
+                {% csrf_token %}
+                <p><button class="button product" onclick="this.form.submit();">Delete Product</button></p>
+              </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+          {% endfor %}
 </body>
 </html>

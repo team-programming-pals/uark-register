@@ -15,7 +15,7 @@ class Product(models.Model):
 	productUUID = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 	productCode = models.CharField(db_index=True, default='', max_length=32)
 	productCount = models.IntegerField(default=0)
-	productPrice = models.FloatField(default=0.00)
+	productPrice = models.DecimalField(max_digits=200,decimal_places=2)
 	productCreationDate = models.DateTimeField(auto_now_add=True)
 
 	def get_product_url(self):
@@ -28,7 +28,7 @@ class Product(models.Model):
 
 	def __str__(self):
 		# This is the default response from a Product object
-		return (str(self.productUUID))
+		return (str(self.productCode))
 
 
 # Create a model for the employees table in our database
@@ -70,18 +70,33 @@ NOTE: These definitions will likely need to be re-worked for the next sprint.
 
 # Create a model for the transaction table in our database
 class Transaction(models.Model):
+	transactionEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True)
 	transactionUUID = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-	transactionCashierUUID = models.UUIDField(default='00000000-0000-0000-0000-000000000000', editable=False)
-	transactionTotal = models.FloatField(default=0.00)
+	transactionTotal = models.DecimalField(max_digits=200,decimal_places=2)
 	transactionType = models.IntegerField(default=0)
 	transactionReferenceID = models.UUIDField(default='00000000-0000-0000-0000-000000000000', editable=False)
 	transactionCreationDate = models.DateTimeField(auto_now_add=True)
 
+	def __str__(self):
+		# This is the default response from an ActiveUser object
+		return (str(self.transactionCreationDate))
+
+class shoppingCartItems(models.Model):
+	product = models.OneToOneField(Product, on_delete=models.CASCADE, null=True)
+	quantity = models.IntegerField(default=0)
+	itemAddedDate = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		# This is the default response from an ActiveUser object
+		return (str(self.product))
+
 # Create a model for the transactionEntry table in our database
-class transactionEntry(models.Model):
-	transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, related_name='entry')
-	entryUUID = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-	productUUID = models.UUIDField(default='00000000-0000-0000-0000-000000000000', editable=False)
-	entryQuantity = models.IntegerField(default=0)
-	entryPrice = models.FloatField(default=0.00)
-	entryCreationDate = models.DateTimeField(auto_now_add=True)
+class shoppingCart(models.Model):
+	employee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True)
+	cartUUID = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+	products = models.ManyToManyField(shoppingCartItems)
+	cartCreationDate = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		# This is the default response from an ActiveUser object
+		return (str(self.employee))

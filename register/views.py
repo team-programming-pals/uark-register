@@ -16,7 +16,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import productSerializer, employeeSerializer, ActiveUserSerializer
-from .models import Product, Employee, ActiveUser
+from .models import Product, Employee, ActiveUser, Transaction, shoppingCart, shoppingCartItems
 from uuid import uuid4
 from random import randint
 
@@ -382,20 +382,82 @@ def signOff(request):
 	return HttpResponseRedirect('/signIn')
 
 
-def transactionMenu(request):
+def transactionMenu(request, queryString=None):
 	# Require an active session to view the product creation page
 	if (not request.session.session_key or not Employee.objects.count()):
 		return redirect('signIn', queryString='You must be signed into the register to view the transaction page')
-
-	if (request.method == 'POST'):
-		test = request.POST.get('employeeUUID')
-		return HttpResponse(test)
+	
+	employee = Employee.objects.get(employeeID=request.session['employeeID'])
+	cartTest = shoppingCart.objects.filter(employee=employee)
 
 	if (request.method == 'GET'):
 		query = request.GET.get('query')
 		if (query):
 			foundProducts = Product.objects.filter(productCode__icontains=query)
-			currentEmployee = Employee.objects.values_list('employeeUUID', flat=True).get(employeeID=request.session['employeeID'])
-			return render (request, 'transaction.html', {'products': foundProducts, 'employeeUUID': currentEmployee })
+			employeeUUID = Employee.objects.values_list('employeeUUID', flat=True).get(employeeID=request.session['employeeID'])
+			return render (request, 'transaction.html', {'products': foundProducts, 'employeeUUID': employeeUUID, 'cart': cartTest, 'queryString': queryString })
 		else:
-			return render (request, 'transaction.html')
+			return render (request, 'transaction.html', {'cart': cartTest, 'queryString': queryString})
+	
+
+def addCartItem(request):
+	if (request.method == 'POST'):
+		employeeUUID = request.POST.get('employeeUUID')
+		productUUID = request.POST.get('productUUID')
+
+		# Grab the relevant employee and product from their respective tables
+		employee = Employee.objects.get(employeeUUID=employeeUUID)
+		product = Product.objects.get(productUUID=productUUID)
+
+		# Create a new cart item or update the quantity of an existing cart item
+		if (shoppingCartItems.objects.filter(product=product).exists()):
+			# Update quantity for an item
+			newQuantity = int(shoppingCartItems.objects.get(product=product).quantity) + 1
+			shoppingCartItems.objects.filter(product=product).update(quantity=newQuantity)
+			return redirect('transactionMenu', queryString='Item added to cart!')
+		else:
+			# Create a new iem
+			cartItem = shoppingCartItems.objects.create(product=product, quantity=1)
+			employeeCart = shoppingCart.objects.get_or_create(employee=employee)
+			employeeCart[0].products.add(cartItem)
+			employeeCart[0].save()
+			return redirect('transactionMenu', queryString='Item added to cart!')
+	
+	return redirect('transactionMenu')
+
+
+def deleteCartItem(request):
+	if (request.method == 'POST'):
+		productUUID = request.POST.get('productUUID')
+		product = Product.objects.get(productUUID=productUUID)
+
+		if (int(shoppingCartItems.objects.get(product=product).quantity) > 1):
+			# Remove one of the quantities
+			newQuantity = int(shoppingCartItems.objects.get(product=product).quantity) - 1
+			shoppingCartItems.objects.filter(product=product).update(quantity=newQuantity)
+			return redirect('transactionMenu')
+		else:
+			# Delete the product
+			shoppingCartItems.objects.filter(product=product).delete()
+			return redirect('transactionMenu')
+	
+	return redirect('transactionMenu')
+
+
+def updateCartQuantity(request):
+	if (request.method == 'POST'):
+		productUUID = request.POST.get('productUUID')
+		productQuantity = request.POST.get('quantity')
+
+		product = Product.objects.get(productUUID=productUUID)
+
+		if (int(productQuantity) > 0):
+			# Update the quantity 
+			shoppingCartItems.objects.filter(product=product).update(quantity=productQuantity)
+			return redirect('transactionMenu')
+		else:
+			# Delete the product if they enter zero quantities or less
+			shoppingCartItems.objects.filter(product=product).delete()
+			return redirect('transactionMenu')
+	
+	return redirect('transactionMenu')
