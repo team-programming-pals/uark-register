@@ -12,23 +12,23 @@ def createTestValues(apps, schema_editor):
 	Product = apps.get_model('register', 'Product')
 
 	# Create the 1st test value
-	testValue = Product(productCode='ExampleItem1', productCount=25)
+	testValue = Product(productCode='ExampleItem1', productCount=25, productPrice=10.00)
 	testValue.save()
 
 	# Create the 2nd test value
-	testValue = Product(productCode='ExampleItem2', productCount=50)
+	testValue = Product(productCode='ExampleItem2', productCount=50, productPrice=20.00)
 	testValue.save()
 
 	# Create the 3rd test value
-	testValue = Product(productCode='ExampleItem3', productCount=75)
+	testValue = Product(productCode='ExampleItem3', productCount=75, productPrice=30.00)
 	testValue.save()
 
 	# Create the 4th test value
-	testValue = Product(productCode='ExampleItem4', productCount=100)
+	testValue = Product(productCode='ExampleItem4', productCount=100, productPrice=40.00)
 	testValue.save()
 
 	# Create the 5th test value
-	testValue = Product(productCode='ExampleItem5', productCount=125)
+	testValue = Product(productCode='ExampleItem5', productCount=125, productPrice=50.00)
 	testValue.save()
 
 

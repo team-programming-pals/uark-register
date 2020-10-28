@@ -40,44 +40,6 @@
     <script>displayMessage("{{queryString}}", 'error');</script>
     {% endif %}
 
-    <form action="/transactionMenu/" method="GET">
-        <input name="query" type="text" placeholder="Search...">
-    </form>
-
-      <br />
-      <br />
-
-      {% if not products %}
-      <p>Search for a product to add to your cart.</p>
-      {% endif %}
-
-      <!-- A link for testing purposes. This will be removed later -->
-      <a href="/transactionDetails/">VISIT THE TRANSACTION DETAILS PAGE</a>
-
-      <section class="productCard">
-        {% for product in products %}
-            <article class="card">
-                <h1>{{ product.productCode }}</h1>
-                <p class="price">${{product.productPrice | floatformat:2}}</p>
-                <p>Stock: {{ product.productCount }}</p>
-                <p>Available Since: {{ product.get_created_date }}</p>
-                <form action="/addCartItem/" method="POST">
-                <input type="hidden" name="employeeUUID" value="{{employeeUUID}}">
-                <input type="hidden" name="productUUID" value="{{product.productUUID}}">
-                {% csrf_token %}
-                <p><button class="button product" onclick="this.form.submit();">Add to Cart</button></p>
-                </form>
-            </article>
-        {% endfor %}
-        </section>
-
-        <!-- Everything below is line is just here for testing purposes only. I slammed this in here because
-             it was just easier to test everything on one page. I will remove all of this after the
-             transaction summary page is complete -->
-        <br />
-        <br />
-        <br />
-        <br />
         <p>TESTING (Showing cart):</p>
         {% for items in cart %}
         <span><b>Cart Total</b>: ${{items.cart_total}}</span>

@@ -61,13 +61,6 @@ class ActiveUser(models.Model):
 		# This is the default response from an ActiveUser object
 		return (str(self.activeName))
 
-
-"""
-NOTE: These definitions will likely need to be re-worked for the next sprint.
-	  I just added the definitions here to give myself a better idea of what
-	  we are suppose to do.
-"""
-
 # Create a model for the transaction table in our database
 class Transaction(models.Model):
 	transactionEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True)
@@ -78,19 +71,21 @@ class Transaction(models.Model):
 	transactionCreationDate = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
-		# This is the default response from an ActiveUser object
+		# This is the default response from a Transaction object
 		return (str(self.transactionCreationDate))
 
+# Create a model for the shoppingCartItems table in our database
 class shoppingCartItems(models.Model):
 	product = models.OneToOneField(Product, on_delete=models.CASCADE, null=True)
 	quantity = models.IntegerField(default=0)
 	itemAddedDate = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
-		# This is the default response from an ActiveUser object
+		# This is the default response from a shoppingCartItems object
 		return (str(self.product))
 
-# Create a model for the transactionEntry table in our database
+
+# Create a model for the shoppingCart table in our database
 class shoppingCart(models.Model):
 	employee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True)
 	cartUUID = models.UUIDField(primary_key=True, default=uuid4, editable=False)
@@ -98,5 +93,9 @@ class shoppingCart(models.Model):
 	cartCreationDate = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
-		# This is the default response from an ActiveUser object
+		# This is the default response from a shoppingCart object
 		return (str(self.employee))
+
+	def cart_total(self):
+		# Return the sum of every product in the cart multiplied by its quantity
+		return sum([(product.product.productPrice * product.quantity) for product in self.products.all()])

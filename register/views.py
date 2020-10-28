@@ -381,26 +381,42 @@ def signOff(request):
 	# Redirect the user to the main page
 	return HttpResponseRedirect('/signIn')
 
-
+# Process all client requests to the transaction page
 def transactionMenu(request, queryString=None):
-	# Require an active session to view the product creation page
+	# Require an active session to view the transaction page
 	if (not request.session.session_key or not Employee.objects.count()):
 		return redirect('signIn', queryString='You must be signed into the register to view the transaction page')
 	
+	# Grab the current employees shopping cart (This is only here for testing)
 	employee = Employee.objects.get(employeeID=request.session['employeeID'])
 	cartTest = shoppingCart.objects.filter(employee=employee)
 
+	# This block of code will handle the search feature. I will probably clean this up and improve it later
 	if (request.method == 'GET'):
 		query = request.GET.get('query')
 		if (query):
+			# Return the search results
 			foundProducts = Product.objects.filter(productCode__icontains=query)
 			employeeUUID = Employee.objects.values_list('employeeUUID', flat=True).get(employeeID=request.session['employeeID'])
 			return render (request, 'transaction.html', {'products': foundProducts, 'employeeUUID': employeeUUID, 'cart': cartTest, 'queryString': queryString })
 		else:
 			return render (request, 'transaction.html', {'cart': cartTest, 'queryString': queryString})
 	
+# Process all client requests to the transaction details page
+def transactionDetails(request):
+	# Require an active session to view the transaction details page
+	if (not request.session.session_key or not Employee.objects.count()):
+		return redirect('signIn', queryString='You must be signed into the register to view the transaction details page')
 
+	# Grab the current employees shopping cart
+	employee = Employee.objects.get(employeeID=request.session['employeeID'])
+	cartTest = shoppingCart.objects.filter(employee=employee)
+
+	return render(request, 'transactionDetails.html', {'cart': cartTest})
+
+# Add items to a shopping cart
 def addCartItem(request):
+	# TODO: Restrict this to logged in employees only
 	if (request.method == 'POST'):
 		employeeUUID = request.POST.get('employeeUUID')
 		productUUID = request.POST.get('productUUID')
@@ -426,7 +442,9 @@ def addCartItem(request):
 	return redirect('transactionMenu')
 
 
+# Delete items from a shopping cart
 def deleteCartItem(request):
+	# TODO: Restrict this to logged in employees only
 	if (request.method == 'POST'):
 		productUUID = request.POST.get('productUUID')
 		product = Product.objects.get(productUUID=productUUID)
@@ -444,7 +462,9 @@ def deleteCartItem(request):
 	return redirect('transactionMenu')
 
 
+# Update the quantity of items in a shopping cart
 def updateCartQuantity(request):
+	# TODO: Restrict this to logged in employees only
 	if (request.method == 'POST'):
 		productUUID = request.POST.get('productUUID')
 		productQuantity = request.POST.get('quantity')
