@@ -499,3 +499,17 @@ def updateCartQuantity(request):
 			return redirect('transactionMenu')
 	
 	return redirect('transactionMenu')
+
+
+#Cancel a transaction
+def cancelTransaction(request):
+    if(request.method == 'POST'):
+        for item in shoppingCartItems.objects.all():
+            productUUID = item.product.productUUID
+            productCount = item.product.productCount
+            newCount = item.quantity + productCount
+            Product.objects.filter(productUUID=productUUID).update(productCount=newCount)
+            item.delete()
+        return redirect('registerMenu')
+
+    return redirect('registerMenu')
