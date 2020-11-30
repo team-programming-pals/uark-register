@@ -181,10 +181,14 @@ def productListing(request, queryString=None):
 	if (not request.session.session_key or not Employee.objects.count()):
 		return redirect('signIn', queryString='You must be signed into the register to view the product listing page')
 
+	# Grab the relevant employee and product from their respective tables	
+	employee = Employee.objects.get(employeeID=request.session['employeeID'])
+	cartTest = shoppingCart.objects.filter(employee=employee)
+
 	# Render the product lising page
 	return render(request, 'productListing.html',
 				 {'products': Product.objects.all(), 
-				 'queryString': queryString})
+				 'queryString': queryString, 'cart': cartTest})
 
 
 # Process all client requests made to the product details page
@@ -194,10 +198,15 @@ def productDetails(request, productUUID, queryString=None):
 	if (not request.session.session_key or not Employee.objects.count()):
 		return redirect('signIn', queryString='You must be signed into the register to view the product details page')
 
+	# Grab the relevant employee and product from their respective tables	
+	employee = Employee.objects.get(employeeID=request.session['employeeID'])
+	cartTest = shoppingCart.objects.filter(employee=employee)
+
 	# Render the product details page
 	return render(request, 'productDetails.html', 
 				 {'product': get_object_or_404(Product, productUUID=productUUID), 
-				 'queryString': queryString})
+				 'queryString': queryString,
+				 'cart': cartTest})
 
 
 # Process all client requests made to the product creation page
@@ -219,9 +228,12 @@ def registerMenu(request, queryString=None):
 	if (not request.session.session_key or not Employee.objects.count()):
 		return redirect('signIn', queryString='You must be signed into the register to view the register menu page')
 
+	# Grab the relevant employee and product from their respective tables	
+	employee = Employee.objects.get(employeeID=request.session['employeeID'])
+	cartTest = shoppingCart.objects.filter(employee=employee)
 	# Render the register menu page
 	return render(request, 'registerMenu.html', 
-				 {'queryString': queryString})
+				 {'queryString': queryString,'cart': cartTest})
 
 
 # Process all client requests for page not found errors
@@ -231,6 +243,9 @@ def register_404(request, exception):
 
 # Process all client requests made to the employee details page
 def employeeDetails(request, queryString=None, employeeID=None):
+	# Grab the relevant employee and product from their respective tables	
+	employee = Employee.objects.get(employeeID=request.session['employeeID'])
+	cartTest = shoppingCart.objects.filter(employee=employee)
 
 	# Always permit the request if there are no users in the database
 	if (not Employee.objects.count()):
@@ -243,13 +258,16 @@ def employeeDetails(request, queryString=None, employeeID=None):
 
 	# Process a request when an employeeID is passed in the URL
 	if (employeeID):
+		
 		return render(request, 'employeeDetails.html', 
 					 {'employee': get_object_or_404(Employee, employeeID=employeeID), 
-					 'employeeID': employeeID})
+					 'employeeID': employeeID,
+					 'cart': cartTest})
 
 	# Render the employee details page
 	return render(request, 'employeeDetails.html',
-				 {'queryString': queryString})
+				 {'queryString': queryString,
+				 "cart": cartTest})
 
 
 # Process all client requests made to the signIn page
