@@ -1,113 +1,76 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Uark Register - Menu</title>
-    {% load static %}
-    <script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}"></script>
-    <script type="text/javascript" src="{% static 'scripts/miscActions.js' %}"></script>
-    <script type="text/javascript" src="{% static 'scripts/employeeActions.js' %}"></script>
-    <script type="text/javascript" src="{% static 'scripts/productActions.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
+  <title>Uark Register - Menu</title>
+  {% load static %}
+  <script type="text/javascript" src="{% static 'scripts/apiRequests.js' %}"></script>
+  <script type="text/javascript" src="{% static 'scripts/miscActions.js' %}"></script>
+  <script type="text/javascript" src="{% static 'scripts/employeeActions.js' %}"></script>
+  <script type="text/javascript" src="{% static 'scripts/productActions.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
 </head>
+
 <body>
-    <header class="banner">
-        <h1>Uark Register</h1>
-        <h3>Main Menu</h3>
-    </header>
+  <header class="banner">
+    <h1>Uark Register</h1>
+    <h3>Main Menu</h3>
+  </header>
 
-    <section class="navbar">
-        <a href="#" onclick="window.location.href='/registerMenu';">
-            <!--Home icon-->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18px" height="18px">
-                <path d="M0 0h24v24H0z" fill="none"/><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            Home
-        </a>
-        <a href="#" class="signout" onclick="window.location.href='/signOff';">
-            <!--Signout icon-->
-            <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" fill="white" width="18px" height="18px">
-                <g><rect fill="none" height="24" width="24"/></g>
-                <g><path d="M11,7L9.6,8.4l2.6,2.6H2v2h10.2l-2.6,2.6L11,17l5-5L11,7z M20,19h-8v2h8c1.1,0,2-0.9,2-2V5c0-1.1-0.9-2-2-2h-8v2h8V19z"/></g></svg>
-             Signout
-        </a>
-    </section>
+  <section class="navbar">
+    <a href="#" onclick="window.location.href='/registerMenu';">
+      <!--Home icon-->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18px" height="18px">
+        <path d="M0 0h24v24H0z" fill="none"/><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      Home
+    </a>
+    <a href="#" class="signout" onclick="window.location.href='/signOff';">
+      <!--Signout icon-->
+      <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" fill="white" width="18px" height="18px">
+        <g><rect fill="none" height="24" width="24"/></g>
+        <g><path d="M11,7L9.6,8.4l2.6,2.6H2v2h10.2l-2.6,2.6L11,17l5-5L11,7z M20,19h-8v2h8c1.1,0,2-0.9,2-2V5c0-1.1-0.9-2-2-2h-8v2h8V19z"/></g></svg>
+        Signout
+    </a>
+  </section>
 
 
-    <!-- Do not delete this span! This is how the
-        generated error messages are displayed! -->
-    <span id="alert" style="display: none"></span>
+  <!-- Do not delete this span! This is how the generated error messages are displayed! -->
+  <span id="alert" style="display: none"></span>
 
-    {% if queryString %}
+  {% if queryString %}
     <script>displayMessage("{{queryString}}", 'error');</script>
-    {% endif %}
+  {% endif %}
 
-    <form action="/transactionMenu/" method="GET">
-        <input name="query" type="text" placeholder="Search...">
-    </form>
+  <form class="search-bar" action="/transactionMenu/" method="GET" style="margin:auto; margin-top:30px; max-width: 80%;">
+    <input type="text" name="query" placeholder="Search...">
+    <input type="submit" value="Search">
+  </form>
 
-      <br />
-      <br />
+  <br><br><br><br>
 
-      {% if not products %}
-      <p>Search for a product to add to your cart.</p>
-      {% endif %}
+  {% if not products %}
+    <p>Search for a product to add to your cart.</p>
+  {% endif %}
 
-      <!-- A link for testing purposes. This will be removed later -->
-      <a href="/transactionDetails/">VISIT THE TRANSACTION DETAILS PAGE</a>
+  <!-- A link for testing purposes. This will be removed later -->
+  <a href="/transactionDetails/">VISIT THE TRANSACTION DETAILS PAGE</a>
 
-      <section class="productCard">
-        {% for product in products %}
-            <article class="card">
-                <h1>{{ product.productCode }}</h1>
-                <p class="price">${{product.productPrice | floatformat:2}}</p>
-                <p>Stock: {{ product.productCount }}</p>
-                <p>Available Since: {{ product.get_created_date }}</p>
-                <form action="/addCartItem/" method="POST">
-                <input type="hidden" name="employeeUUID" value="{{employeeUUID}}">
-                <input type="hidden" name="productUUID" value="{{product.productUUID}}">
-                {% csrf_token %}
-                <p><button class="button product" onclick="this.form.submit();">Add to Cart</button></p>
-                </form>
-            </article>
-        {% endfor %}
-        </section>
+  <section class="productCard">
+    {% for product in products %}
+      <article class="card">
+        <h1>{{ product.productCode }}</h1>
+        <p class="price">${{product.productPrice | floatformat:2}}</p>
+        <p>Stock: {{ product.productCount }}</p>
+        <p>Available Since: {{ product.get_created_date }}</p>
+        <form action="/addCartItem/" method="POST">
+          <input type="hidden" name="employeeUUID" value="{{employeeUUID}}">
+          <input type="hidden" name="productUUID" value="{{product.productUUID}}">
+          {% csrf_token %}
+          <p><button class="button product" onclick="this.form.submit();">Add to Cart</button></p>
+        </form>
+      </article>
+    {% endfor %}
+  </section>
 
-        <!-- Everything below is line is just here for testing purposes only. I slammed this in here because
-             it was just easier to test everything on one page. I will remove all of this after the
-             transaction summary page is complete -->
-        <br />
-        <br />
-        <br />
-        <br />
-        <p>TESTING (Showing cart):</p>
-        {% for items in cart %}
-        <span><b>Cart Total</b>: ${{items.cart_total}}</span>
-        <table border=1px>
-            <tr>
-              <th>Product Name</th>
-              <th>Quantity</th>
-              <th>Cart Action</th>
-            </tr>
-            {% for product in items.products.all %}
-            <tr>
-              <td>{{product}}</td>
-              <td>
-                <form action="/updateCartQuantity/" method="POST">
-                  <input type="text" name="quantity" value="{{product.quantity}}">
-                  <input type="hidden" name="productUUID" value="{{product.product.productUUID}}">
-                  {% csrf_token %}
-                  <p><button class="button product" onclick="this.form.submit();">Update Quantity</button></p>
-                </form>
-                </td>
-              <td>
-              <form action="/deleteCartItem/" method="POST">
-                <input type="hidden" name="productUUID" value="{{product.product.productUUID}}">
-                {% csrf_token %}
-                <p><button class="button product" onclick="this.form.submit();">Delete Product</button></p>
-              </form>
-              </td>
-            </tr>
-            {% endfor %}
-          </table>
-          {% endfor %}
 </body>
 </html>
