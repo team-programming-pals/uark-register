@@ -84,9 +84,17 @@ a:active {
     padding: 14px 20px;
     text-decoration: none;
 }
+
 .navbar a:hover {
     background-color:  var(--accent-color-highlight);
     color: var(--primary-text-color);
+}
+
+.navbar a.cart { 
+    float: right;
+}
+.navbar a.cart:hover{
+    background-color: var(--accent-color-highlight);
 }
 .navbar a.signout { /* Items on right of navbar (ex. Signout) */
     float: right;

@@ -1,6 +1,6 @@
 // Use ajaxGet when you want to get information from the database
 function ajaxGet(resourceRelativeUri, callback) {
-	return ajax(resourceRelativeUri, action, "GET", null, null, callback);
+	return ajax(resourceRelativeUri, "GET", null, null, callback);
 }
 
 // Use ajaxPost when you want to create a new database record
