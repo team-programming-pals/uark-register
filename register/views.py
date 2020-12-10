@@ -19,6 +19,7 @@ from .serializers import productSerializer, employeeSerializer, ActiveUserSerial
 from .models import Product, Employee, ActiveUser, Transaction, shoppingCart, shoppingCartItems
 from uuid import uuid4
 from random import randint
+from datetime import datetime
 
 
 
@@ -505,11 +506,38 @@ def updateCartQuantity(request):
 def cancelTransaction(request):
     if(request.method == 'POST'):
         for item in shoppingCartItems.objects.all():
+            #Calculate how many items to return to the store
             productUUID = item.product.productUUID
             productCount = item.product.productCount
             newCount = item.quantity + productCount
+
+            #Update store and delete items from cart
             Product.objects.filter(productUUID=productUUID).update(productCount=newCount)
             item.delete()
+
+        return redirect('registerMenu')
+
+    return redirect('registerMenu')
+
+#Complete a transaction
+def completeTransaction(request):
+    if(request.method == 'POST'):
+        #Get transaction information
+        transactionUUID = request.POST.get('transactionUUID')
+        transactionTotal = request.POST.get('transactionTotal')
+        transactionType = request.POST.get('transactionType')
+        transactionEmployee = request.POST.get('employeeUUID')
+
+        #Update transaction model
+        Transaction.objects.filter(transactionUUID=transactionUUID).update(transactionCreationDate=datetime.now())
+        Transaction.objects.filter(transactionUUID=transactionUUID).update(transactionTotal=transactionTotal)
+        Transaction.objects.filter(transactionUUID=transactionUUID).update(transactionType=transactionType)
+        Transaction.objects.filter(transactionUUID=transactionUUID).update(transactionEmployee=transactionEmployee)
+
+        #Delete items in shopping cart
+        for item in shoppingCartItems.objects.all():
+            item.delete()
+
         return redirect('registerMenu')
 
     return redirect('registerMenu')

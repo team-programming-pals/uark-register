@@ -51,6 +51,7 @@ urlpatterns = [
 	path('deleteCartItem/', views.deleteCartItem, name='deleteCartItem'),
 	path('updateCartQuantity/', views.updateCartQuantity, name='updateCartQuantity'),
     path('cancelTransaction/', views.cancelTransaction, name='cancelTransaction'),
+    path('completeTransaction/', views.completeTransaction, name='completeTransaction'),
 	path('signIn/', views.signIn, name='signIn'),
 	path('signOff/', views.signOff, name='signOff'),
 

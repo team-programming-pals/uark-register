@@ -92,13 +92,14 @@
     <div style="padding: 1rem;"></div>
 
     {% endfor %}
-    <div class="grid" style="width: 80%; margin: auto;">
+    <div class="grid" style="width: 80%; margin: auto; justify-items: center">
       <form action="/cancelTransaction/" method="POST">
         {% csrf_token %}
         <button class="button" onclick="this.form.submit();">Cancel Transaction</button>
       </form>
       <form action="/completeTransaction/" method="POST">
-        <button class="button" onclick="alert('Not yet implemented');">Complete Transaction</button>
+          {% csrf_token %}
+          <button class="button" onclick="this.form.submit;">Complete Transaction</button>
       </form>
     </div>
   </div>
